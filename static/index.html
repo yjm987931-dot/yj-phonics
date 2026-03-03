@@ -171,6 +171,90 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
 .review-info .word-count { font-size:48px; font-weight:800; color:var(--primary); }
 .review-info p { color:var(--text-light); margin-top:4px; }
 
+/* ===== Home Tabs ===== */
+.home-tabs { display:flex; gap:0; margin-bottom:24px; background:#E8E6FF; border-radius:12px; padding:4px; }
+.home-tab { flex:1; padding:12px 24px; font-size:16px; font-weight:700; border-radius:10px; background:transparent; color:var(--primary); text-align:center; }
+.home-tab.active { background:var(--primary); color:#fff; box-shadow:0 2px 8px rgba(108,99,255,0.3); }
+
+/* ===== Story Book ===== */
+.day-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:20px; }
+.day-card { background:var(--card); border-radius:var(--radius); padding:28px 24px; text-align:center; box-shadow:var(--shadow); cursor:pointer; transition:all .3s; border-top:4px solid var(--primary); position:relative; }
+.day-card:hover:not(.locked) { transform:translateY(-6px); box-shadow:0 8px 25px rgba(108,99,255,0.25); }
+.day-card.locked { opacity:0.5; cursor:not-allowed; border-top-color:#ccc; }
+.day-card.completed { border-top-color:var(--success); }
+.day-card.assigned { border-top-color:var(--secondary); }
+.day-card .day-icon { font-size:48px; margin-bottom:14px; }
+.day-card h3 { font-size:17px; margin-bottom:6px; }
+.day-card p { color:var(--text-light); font-size:13px; }
+.hw-badge { background:var(--secondary); color:#fff; font-size:11px; padding:3px 8px; border-radius:10px; position:absolute; top:10px; right:10px; }
+.lock-msg { font-size:11px; color:var(--text-light); margin-top:8px; }
+
+/* Story Day Detail */
+.story-section { background:var(--card); border-radius:var(--radius); padding:24px; margin-bottom:16px; box-shadow:var(--shadow); }
+.story-section h3 { font-size:18px; margin-bottom:16px; color:var(--primary); }
+.mode-buttons { display:flex; gap:12px; flex-wrap:wrap; }
+.mode-buttons button { flex:1; min-width:140px; padding:14px 20px; font-size:14px; font-weight:600; border-radius:12px; }
+.mode-buttons button.done { opacity:0.7; }
+
+/* Story Read Mode */
+.story-reader { max-width:700px; margin:0 auto; }
+.story-image-container { text-align:center; margin-bottom:16px; }
+.story-image-container img { max-width:100%; max-height:350px; border-radius:var(--radius); box-shadow:var(--shadow); object-fit:contain; }
+.story-sentence { font-size:24px; font-weight:700; color:var(--text); text-align:center; padding:20px; background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); cursor:pointer; line-height:1.6; }
+.story-sentence:hover { background:#F8F7FF; }
+.story-nav { display:flex; justify-content:center; align-items:center; gap:20px; margin-top:20px; }
+.story-nav .page-ind { font-size:14px; color:var(--text-light); font-weight:600; min-width:60px; text-align:center; }
+
+/* Fill in the Blank */
+.fill-sentence { font-size:22px; line-height:2.2; padding:20px; background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:20px; text-align:center; font-weight:600; }
+.fill-blank { display:inline-block; min-width:80px; border-bottom:3px dashed var(--primary); padding:4px 12px; margin:0 6px; cursor:pointer; min-height:36px; vertical-align:bottom; transition:all .2s; border-radius:4px; }
+.fill-blank.filled { border-bottom-style:solid; background:#F0EEFF; }
+.fill-blank.correct-blank { background:#D4EDDA; border-color:var(--success); }
+.fill-blank.wrong-blank { background:#F8D7DA; border-color:var(--warning); animation:shake .3s; }
+.word-bank { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; padding:16px; background:#F8F7FF; border-radius:var(--radius); margin-top:16px; }
+.word-option { display:inline-block; padding:10px 20px; background:var(--primary); color:#fff; border-radius:10px; font-size:18px; font-weight:600; cursor:grab; user-select:none; touch-action:none; transition:all .2s; }
+.word-option:hover { transform:scale(1.05); }
+.word-option.dragging { opacity:0.5; transform:scale(1.1); }
+.word-option.selected { box-shadow:0 0 0 3px var(--accent); transform:scale(1.08); }
+.word-option.used { opacity:0.3; pointer-events:none; }
+
+/* Unscramble */
+.drop-zone { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; padding:16px; background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); margin-bottom:16px; min-height:60px; }
+.drop-slot { display:inline-flex; align-items:center; justify-content:center; min-width:60px; min-height:44px; padding:10px 16px; border:2px dashed #ccc; border-radius:10px; font-size:18px; font-weight:600; text-align:center; transition:all .2s; cursor:pointer; }
+.drop-slot.drag-over { border-color:var(--primary); background:#F8F7FF; }
+.drop-slot.filled { border-style:solid; border-color:var(--primary); background:#F0EEFF; color:var(--text); }
+.drop-slot.correct-slot { background:#D4EDDA; border-color:var(--success); }
+.drop-slot.wrong-slot { background:#F8D7DA; border-color:var(--warning); animation:shake .3s; }
+.scramble-bank { display:flex; flex-wrap:wrap; gap:10px; justify-content:center; padding:16px; background:#F8F7FF; border-radius:var(--radius); }
+
+/* Homework Tab */
+.hw-section { margin-bottom:24px; }
+.hw-section h3 { font-size:16px; color:var(--text-light); margin-bottom:12px; padding-bottom:8px; border-bottom:2px solid #E8E6FF; }
+.hw-card { background:var(--card); border-radius:var(--radius); padding:16px 20px; margin-bottom:12px; box-shadow:var(--shadow); display:flex; align-items:center; gap:16px; }
+.hw-card.pending { border-left:4px solid var(--warning); }
+.hw-card.done { border-left:4px solid var(--success); opacity:0.8; }
+.hw-card .hw-icon { font-size:32px; }
+.hw-card .hw-info { flex:1; }
+.hw-card .hw-info h4 { font-size:15px; margin-bottom:4px; }
+.hw-card .hw-info .hw-detail { font-size:12px; color:var(--text-light); }
+.hw-card .hw-status { font-size:12px; padding:6px 12px; border-radius:8px; font-weight:600; }
+.hw-card .hw-status.incomplete { background:#FFF3F3; color:var(--warning); }
+.hw-card .hw-status.complete { background:#E8F8F0; color:var(--success); }
+.hw-go-btn { padding:8px 16px; font-size:13px; font-weight:600; }
+
+/* Teacher Homework Assignment */
+.hw-assign-section { background:#F8F7FF; border-radius:var(--radius); padding:20px; margin-top:16px; }
+.hw-assign-section h4 { font-size:14px; margin-bottom:12px; color:var(--primary); }
+.hw-assign-row { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:10px; }
+.hw-assign-row label { font-size:13px; font-weight:600; min-width:80px; }
+.hw-toggle { padding:6px 12px; font-size:12px; border-radius:8px; background:#E8E6FF; color:var(--primary); font-weight:600; }
+.hw-toggle.active { background:var(--primary); color:#fff; }
+.hw-matrix { display:grid; grid-template-columns:auto repeat(3,60px); gap:4px; font-size:12px; margin-top:12px; }
+.hw-matrix .hw-m-header { font-weight:700; text-align:center; padding:4px; }
+.hw-matrix .hw-m-cell { text-align:center; padding:4px; border-radius:4px; }
+.hw-m-done { background:#D4EDDA; color:var(--success); }
+.hw-m-pending { background:#FFF3F3; color:var(--warning); }
+
 /* ===== Responsive ===== */
 @media(max-width:768px) {
     nav { padding:0 12px; height:auto; flex-wrap:wrap; padding-bottom:8px; }
@@ -183,6 +267,16 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
     .review-card { padding:14px 10px; }
     .review-num { font-size:26px; }
     .review-sub { font-size:10px; }
+    .day-grid { grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); }
+    .mode-buttons { flex-direction:column; }
+    .mode-buttons button { min-width:auto; }
+    .story-sentence { font-size:18px; }
+    .fill-sentence { font-size:17px; }
+    .word-option { font-size:15px; padding:8px 14px; }
+    .drop-slot { min-width:50px; font-size:15px; padding:8px 12px; }
+    .hw-card { flex-direction:column; text-align:center; }
+    .home-tabs { flex-direction:row; }
+    .home-tab { font-size:14px; padding:10px 16px; }
 }
 </style>
 </head>
@@ -214,29 +308,42 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
 
   <!-- Home -->
   <div id="screen-home" class="screen">
-    <h2>학습 활동</h2>
-    <div class="activity-grid">
-      <div class="activity-card" onclick="showScreen('words')" style="border-top-color:var(--primary)">
-        <div class="icon">ABC</div><h3>단어 탐색기</h3><p>190개 단어 학습하기</p>
+    <div class="home-tabs">
+      <button class="home-tab active" onclick="switchHomeTab('words')">Words</button>
+      <button class="home-tab" onclick="switchHomeTab('storybook')">Story Book</button>
+    </div>
+
+    <!-- Words Tab -->
+    <div id="home-tab-words">
+      <h2>학습 활동</h2>
+      <div class="activity-grid">
+        <div class="activity-card" onclick="showScreen('words')" style="border-top-color:var(--primary)">
+          <div class="icon">ABC</div><h3>단어 탐색기</h3><p>190개 단어 학습하기</p>
+        </div>
+        <div class="activity-card" onclick="showScreen('gameshow')" style="border-top-color:var(--secondary)">
+          <div class="icon">?!</div><h3>듣기 퀴즈</h3><p>발음 듣고 단어 맞추기</p>
+        </div>
+        <div class="activity-card" onclick="showScreen('spelling')" style="border-top-color:var(--success)">
+          <div class="icon">Aa</div><h3>스펠링 퀴즈</h3><p>뜻 보고 영어 단어 쓰기</p>
+        </div>
+        <div class="activity-card" onclick="showScreen('ispy')" style="border-top-color:var(--accent)">
+          <div class="icon">ab</div><h3>글자 찾기</h3><p>알파벳 찾기 게임</p>
+        </div>
+        <div class="activity-card" onclick="showScreen('progress')" style="border-top-color:var(--vowel-i)">
+          <div class="icon">99</div><h3>내 진도</h3><p>학습 현황 확인</p>
+        </div>
       </div>
-      <div class="activity-card" onclick="showScreen('gameshow')" style="border-top-color:var(--secondary)">
-        <div class="icon">?!</div><h3>듣기 퀴즈</h3><p>발음 듣고 단어 맞추기</p>
-      </div>
-      <div class="activity-card" onclick="showScreen('spelling')" style="border-top-color:var(--success)">
-        <div class="icon">Aa</div><h3>스펠링 퀴즈</h3><p>뜻 보고 영어 단어 쓰기</p>
-      </div>
-      <div class="activity-card" onclick="showScreen('ispy')" style="border-top-color:var(--accent)">
-        <div class="icon">ab</div><h3>글자 찾기</h3><p>알파벳 찾기 게임</p>
-      </div>
-      <div class="activity-card" onclick="showScreen('progress')" style="border-top-color:var(--vowel-i)">
-        <div class="icon">99</div><h3>내 진도</h3><p>학습 현황 확인</p>
+      <div class="review-section">
+        <h2>복습 모드</h2>
+        <div class="review-grid" id="review-grid"></div>
       </div>
     </div>
 
-    <!-- Review Mode Section -->
-    <div class="review-section">
-      <h2>복습 모드</h2>
-      <div class="review-grid" id="review-grid"></div>
+    <!-- Story Book Tab -->
+    <div id="home-tab-storybook" class="hidden">
+      <h2>Phonics Story Book</h2>
+      <p style="color:var(--text-light);margin-bottom:20px">그림과 함께 파닉스 스토리를 읽고 활동해요!</p>
+      <div class="day-grid" id="day-grid"></div>
     </div>
   </div>
 
@@ -420,6 +527,85 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
       <thead><tr><th>활동</th><th>단어</th><th>정답/총</th><th>정답률</th><th>점수</th><th>날짜/시간</th></tr></thead>
       <tbody id="sd-history"></tbody>
     </table>
+    <div id="sd-homework-section" style="margin-top:24px"></div>
+  </div>
+
+  <!-- Story Day Detail -->
+  <div id="screen-story-day" class="screen">
+    <button class="btn-outline btn-sm" onclick="showScreen('home');switchHomeTab('storybook')">< 돌아가기</button>
+    <h2 id="story-day-title">Day 1</h2>
+    <div id="story-day-list"></div>
+  </div>
+
+  <!-- Story Read -->
+  <div id="screen-story-read" class="screen">
+    <button class="btn-outline btn-sm" id="story-read-back" onclick="backFromStory()">< 돌아가기</button>
+    <h2 id="story-read-title">Read Along</h2>
+    <div class="story-reader">
+      <div class="story-image-container"><img id="story-read-img" src="" alt="Story"></div>
+      <div class="story-sentence" id="story-read-text" onclick="speakSentence()"></div>
+      <p style="text-align:center;color:var(--text-light);font-size:12px;margin-top:8px">문장을 클릭하면 소리가 나와요!</p>
+      <div class="story-nav">
+        <button class="btn-outline btn-sm" id="story-prev-btn" onclick="storyReadPrev()">이전</button>
+        <span class="page-ind" id="story-read-ind">1 / 8</span>
+        <button class="btn-primary btn-sm" id="story-next-btn" onclick="storyReadNext()">다음</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Story Fill in the Blank -->
+  <div id="screen-story-fill" class="screen">
+    <button class="btn-outline btn-sm" onclick="backFromStory()">< 돌아가기</button>
+    <h2>Fill in the Blank</h2>
+    <div class="game-container">
+      <div class="game-status">
+        <div class="round" id="fill-round">1 / 8</div>
+        <div class="score" id="fill-score">0점</div>
+      </div>
+      <div class="story-image-container"><img id="fill-img" src="" alt=""></div>
+      <div class="fill-sentence" id="fill-sentence"></div>
+      <div class="word-bank" id="fill-bank"></div>
+    </div>
+    <div id="fill-result" class="hidden" style="margin-top:20px">
+      <div class="game-result">
+        <h3>Fill in the Blank 결과</h3>
+        <div class="big-score" id="fill-final-score">0</div>
+        <p style="margin:12px 0;color:var(--text-light)" id="fill-final-msg"></p>
+        <button class="btn-primary" style="margin:8px" onclick="backFromStory()">돌아가기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Story Unscramble -->
+  <div id="screen-story-unscramble" class="screen">
+    <button class="btn-outline btn-sm" onclick="backFromStory()">< 돌아가기</button>
+    <h2>Unscramble</h2>
+    <div class="game-container">
+      <div class="game-status">
+        <div class="round" id="unscr-round">1 / 8</div>
+        <div class="score" id="unscr-score">0점</div>
+      </div>
+      <div class="story-image-container"><img id="unscr-img" src="" alt=""></div>
+      <div class="drop-zone" id="unscr-dropzone"></div>
+      <div class="scramble-bank" id="unscr-bank"></div>
+      <div style="text-align:center;margin-top:16px">
+        <button class="btn-primary" onclick="checkUnscramble()">확인</button>
+      </div>
+    </div>
+    <div id="unscr-result" class="hidden" style="margin-top:20px">
+      <div class="game-result">
+        <h3>Unscramble 결과</h3>
+        <div class="big-score" id="unscr-final-score">0</div>
+        <p style="margin:12px 0;color:var(--text-light)" id="unscr-final-msg"></p>
+        <button class="btn-primary" style="margin:8px" onclick="backFromStory()">돌아가기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Homework Tab (Student) -->
+  <div id="screen-homework" class="screen">
+    <h2>내 과제</h2>
+    <div id="hw-list"></div>
   </div>
 </div>
 
@@ -605,7 +791,7 @@ function setupNav() {
   } else {
     links = [
       {id:'home',label:'홈'},{id:'words',label:'단어 탐색기'},{id:'gameshow',label:'듣기 퀴즈'},
-      {id:'spelling',label:'스펠링'},{id:'ispy',label:'글자 찾기'},{id:'progress',label:'내 진도'}
+      {id:'spelling',label:'스펠링'},{id:'ispy',label:'글자 찾기'},{id:'homework',label:'과제'},{id:'progress',label:'내 진도'}
     ];
   }
   nav.innerHTML = links.map(l =>
@@ -627,6 +813,7 @@ function showScreen(id) {
   if (id === 'spelling') renderLevelBar('sp-level-bar', spLevel, 'changeSpLevel');
   if (id === 'progress') loadProgress();
   if (id === 'teacher') loadStudents();
+  if (id === 'homework') loadHomework();
 }
 
 // ===== Word Explorer =====
@@ -1123,9 +1310,11 @@ async function loadStudents() {
           <div style="margin-top:10px;padding:8px;background:#F8F7FF;border-radius:8px">${activityHtml}</div>
           <div class="actions">
             <button class="btn-primary btn-sm" onclick="viewStudent(${s.id})">진도 보기</button>
+            <button class="btn-secondary btn-sm" onclick="toggleHwAssign(${s.id},'${s.name}')">과제 배정</button>
             <button class="btn-outline btn-sm" onclick="resetStudentPw(${s.id},'${s.name}')">비번 초기화</button>
             <button class="btn-warning btn-sm" onclick="deleteStudent(${s.id},'${s.name}')">삭제</button>
           </div>
+          <div id="hw-container-${s.id}" class="hidden"></div>
         </div>
       `;
     }).join('');
@@ -1168,13 +1357,7 @@ async function resetStudentPw(id, name) {
 }
 
 async function viewStudent(id) {
-  try {
-    const res = await fetch(`/api/student/${id}/progress`);
-    const data = await res.json();
-    document.getElementById('sd-name').textContent = data.student.name + ' 학생';
-    renderStudentDetail(data.summary, data.history);
-    showScreen('student-detail');
-  } catch(e) {}
+  viewStudentFull(id);
 }
 
 function renderStudentDetail(summary, history) {
@@ -1217,6 +1400,733 @@ function shuffle(arr) {
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
+}
+
+// ===== Story Book Data =====
+const STORY_DATA = {
+  days: [
+    { id:1, title:'Day 1', stories:[
+      { id:'big-pig', title:'Big Pig', images:['day1_bigpig_1','day1_bigpig_2'], sentences:[
+        {text:'Pig.', words:['Pig.'], blankWord:'Pig', imageRef:'day1_bigpig_1'},
+        {text:'Pig is big!', words:['Pig','is','big!'], blankWord:'big', imageRef:'day1_bigpig_1'},
+        {text:'Pig can dig.', words:['Pig','can','dig.'], blankWord:'dig', imageRef:'day1_bigpig_1'},
+        {text:'Dig, dig, dig.', words:['Dig,','dig,','dig.'], blankWord:'dig', imageRef:'day1_bigpig_1'},
+        {text:'Cat.', words:['Cat.'], blankWord:'Cat', imageRef:'day1_bigpig_2'},
+        {text:'Cat can dig.', words:['Cat','can','dig.'], blankWord:'Cat', imageRef:'day1_bigpig_2'},
+        {text:'Dig, dig, dig.', words:['Dig,','dig,','dig.'], blankWord:'Dig', imageRef:'day1_bigpig_2'},
+        {text:'Pig and Cat can dig.', words:['Pig','and','Cat','can','dig.'], blankWord:'Cat', imageRef:'day1_bigpig_2'}
+      ]},
+      { id:'matt-hid', title:'Matt Hid', images:['day1_matthid_1','day1_matthid_2'], sentences:[
+        {text:'Matt.', words:['Matt.'], blankWord:'Matt', imageRef:'day1_matthid_1'},
+        {text:'Matt hid.', words:['Matt','hid.'], blankWord:'hid', imageRef:'day1_matthid_1'},
+        {text:'Fat Cat.', words:['Fat','Cat.'], blankWord:'Fat', imageRef:'day1_matthid_1'},
+        {text:'Fat Cat hid.', words:['Fat','Cat','hid.'], blankWord:'hid', imageRef:'day1_matthid_1'},
+        {text:'Matt ran.', words:['Matt','ran.'], blankWord:'ran', imageRef:'day1_matthid_2'},
+        {text:'Fat Cat ran.', words:['Fat','Cat','ran.'], blankWord:'ran', imageRef:'day1_matthid_2'},
+        {text:'Fat Cat and Matt ran.', words:['Fat','Cat','and','Matt','ran.'], blankWord:'Matt', imageRef:'day1_matthid_2'},
+        {text:'Fat Cat hid Matt.', words:['Fat','Cat','hid','Matt.'], blankWord:'hid', imageRef:'day1_matthid_2'}
+      ]}
+    ]},
+    { id:2, title:'Day 2', stories:[
+      { id:'on-the-mat', title:'On the Mat', images:['day2_onthemat_1'], sentences:[
+        {text:'The rat is on the mat.', words:['The','rat','is','on','the','mat.'], blankWord:'rat', imageRef:'day2_onthemat_1'},
+        {text:'And the cat is on the rat.', words:['And','the','cat','is','on','the','rat.'], blankWord:'cat', imageRef:'day2_onthemat_1'},
+        {text:'And the pig is on the cat.', words:['And','the','pig','is','on','the','cat.'], blankWord:'pig', imageRef:'day2_onthemat_1'},
+        {text:'And the wig is on the pig.', words:['And','the','wig','is','on','the','pig.'], blankWord:'wig', imageRef:'day2_onthemat_1'},
+        {text:'And the hat is on the wig.', words:['And','the','hat','is','on','the','wig.'], blankWord:'hat', imageRef:'day2_onthemat_1'},
+        {text:'And the bat is on the hat!', words:['And','the','bat','is','on','the','hat!'], blankWord:'bat', imageRef:'day2_onthemat_1'}
+      ]},
+      { id:'i-like-it', title:'I Like It!', images:['day2_ilikeit_1'], sentences:[
+        {text:'I like to dig.', words:['I','like','to','dig.'], blankWord:'dig', imageRef:'day2_ilikeit_1'},
+        {text:'I like to zip.', words:['I','like','to','zip.'], blankWord:'zip', imageRef:'day2_ilikeit_1'},
+        {text:'I like to nap.', words:['I','like','to','nap.'], blankWord:'nap', imageRef:'day2_ilikeit_1'},
+        {text:'I like to dip.', words:['I','like','to','dip.'], blankWord:'dip', imageRef:'day2_ilikeit_1'},
+        {text:'I like to zig.', words:['I','like','to','zig.'], blankWord:'zig', imageRef:'day2_ilikeit_1'},
+        {text:'I like to zag.', words:['I','like','to','zag.'], blankWord:'zag', imageRef:'day2_ilikeit_1'},
+        {text:'I like to wag!', words:['I','like','to','wag!'], blankWord:'wag', imageRef:'day2_ilikeit_1'}
+      ]}
+    ]},
+    { id:3, title:'Day 3', stories:[
+      { id:'fox-ox-box', title:'Fox, Ox, and the Box', images:['day3_foxox_1','day3_foxox_2'], sentences:[
+        {text:'Fox.', words:['Fox.'], blankWord:'Fox', imageRef:'day3_foxox_1'},
+        {text:'Box.', words:['Box.'], blankWord:'Box', imageRef:'day3_foxox_1'},
+        {text:'Can Fox fit in the box?', words:['Can','Fox','fit','in','the','box?'], blankWord:'fit', imageRef:'day3_foxox_1'},
+        {text:'Fox fits in the box.', words:['Fox','fits','in','the','box.'], blankWord:'fits', imageRef:'day3_foxox_1'},
+        {text:'Ox.', words:['Ox.'], blankWord:'Ox', imageRef:'day3_foxox_2'},
+        {text:'Can Ox fit on the box?', words:['Can','Ox','fit','on','the','box?'], blankWord:'Ox', imageRef:'day3_foxox_2'},
+        {text:'Ox is on the box.', words:['Ox','is','on','the','box.'], blankWord:'Ox', imageRef:'day3_foxox_2'},
+        {text:'Ox rips the box!', words:['Ox','rips','the','box!'], blankWord:'rips', imageRef:'day3_foxox_2'}
+      ]},
+      { id:'what-has-dots', title:'What Has Dots?', images:['day3_whathasdots_1'], sentences:[
+        {text:'What has dots?', words:['What','has','dots?'], blankWord:'dots', imageRef:'day3_whathasdots_1'},
+        {text:'Pots with dots.', words:['Pots','with','dots.'], blankWord:'Pots', imageRef:'day3_whathasdots_1'},
+        {text:'What has wigs?', words:['What','has','wigs?'], blankWord:'wigs', imageRef:'day3_whathasdots_1'},
+        {text:'Pigs with wigs.', words:['Pigs','with','wigs.'], blankWord:'Pigs', imageRef:'day3_whathasdots_1'},
+        {text:'What has tops?', words:['What','has','tops?'], blankWord:'tops', imageRef:'day3_whathasdots_1'},
+        {text:'Pots with tops.', words:['Pots','with','tops.'], blankWord:'tops', imageRef:'day3_whathasdots_1'},
+        {text:'What has mops?', words:['What','has','mops?'], blankWord:'mops', imageRef:'day3_whathasdots_1'},
+        {text:'Pigs with mops.', words:['Pigs','with','mops.'], blankWord:'mops', imageRef:'day3_whathasdots_1'}
+      ]},
+      { id:'what-has-caps', title:'What Has Caps?', images:['day3_whathascaps_1'], sentences:[
+        {text:'What has hats?', words:['What','has','hats?'], blankWord:'hats', imageRef:'day3_whathascaps_1'},
+        {text:'Cats with hats.', words:['Cats','with','hats.'], blankWord:'Cats', imageRef:'day3_whathascaps_1'},
+        {text:'What has bats?', words:['What','has','bats?'], blankWord:'bats', imageRef:'day3_whathascaps_1'},
+        {text:'Rats with bats.', words:['Rats','with','bats.'], blankWord:'bats', imageRef:'day3_whathascaps_1'},
+        {text:'What has mitts?', words:['What','has','mitts?'], blankWord:'mitts', imageRef:'day3_whathascaps_1'},
+        {text:'Cats with mitts.', words:['Cats','with','mitts.'], blankWord:'mitts', imageRef:'day3_whathascaps_1'},
+        {text:'What has caps?', words:['What','has','caps?'], blankWord:'caps', imageRef:'day3_whathascaps_1'},
+        {text:'Rats with caps.', words:['Rats','with','caps.'], blankWord:'caps', imageRef:'day3_whathascaps_1'}
+      ]}
+    ]},
+    { id:4, title:'Day 4', stories:[
+      { id:'bugs-and-dogs', title:'Bugs and Dogs', images:['day4_bugsdogs_1','day4_bugsdogs_2'], sentences:[
+        {text:'Bugs and dogs.', words:['Bugs','and','dogs.'], blankWord:'Bugs', imageRef:'day4_bugsdogs_1'},
+        {text:'The bugs like the dogs.', words:['The','bugs','like','the','dogs.'], blankWord:'like', imageRef:'day4_bugsdogs_1'},
+        {text:'The dogs jog. The bugs sit.', words:['The','dogs','jog.','The','bugs','sit.'], blankWord:'jog', imageRef:'day4_bugsdogs_1'},
+        {text:'The dogs dig. The bugs sit.', words:['The','dogs','dig.','The','bugs','sit.'], blankWord:'dig', imageRef:'day4_bugsdogs_1'},
+        {text:'The dogs bat. The bugs sit.', words:['The','dogs','bat.','The','bugs','sit.'], blankWord:'bat', imageRef:'day4_bugsdogs_2'},
+        {text:'The dogs tug. The bugs sit.', words:['The','dogs','tug.','The','bugs','sit.'], blankWord:'tug', imageRef:'day4_bugsdogs_2'},
+        {text:'The bugs pat the dogs.', words:['The','bugs','pat','the','dogs.'], blankWord:'pat', imageRef:'day4_bugsdogs_2'},
+        {text:'The dogs and bugs hug.', words:['The','dogs','and','bugs','hug.'], blankWord:'hug', imageRef:'day4_bugsdogs_2'}
+      ]},
+      { id:'bug-fun', title:'Bug Fun', images:['day4_bugfun_1'], sentences:[
+        {text:'This bug says, "Hop!"', words:['This','bug','says,','"Hop!"'], blankWord:'Hop', imageRef:'day4_bugfun_1'},
+        {text:'This bug says, "Dig!"', words:['This','bug','says,','"Dig!"'], blankWord:'Dig', imageRef:'day4_bugfun_1'},
+        {text:'This bug says, "Pop!"', words:['This','bug','says,','"Pop!"'], blankWord:'Pop', imageRef:'day4_bugfun_1'},
+        {text:'This bug says, "Jig!"', words:['This','bug','says,','"Jig!"'], blankWord:'Jig', imageRef:'day4_bugfun_1'},
+        {text:'"DOGS!" says this bug. "RUN!"', words:['"DOGS!"','says','this','bug.','"RUN!"'], blankWord:'DOGS', imageRef:'day4_bugfun_1'},
+        {text:'Lots of dogs! Lots of bugs! Lots of fun!', words:['Lots','of','dogs!','Lots','of','bugs!','Lots','of','fun!'], blankWord:'fun', imageRef:'day4_bugfun_1'}
+      ]},
+      { id:'cub-and-pup', title:'Cub and Pup', images:['day4_cubpup_1','day4_cubpup_2'], sentences:[
+        {text:'Cub and Pup dig.', words:['Cub','and','Pup','dig.'], blankWord:'dig', imageRef:'day4_cubpup_1'},
+        {text:'We can sit on it!', words:['We','can','sit','on','it!'], blankWord:'sit', imageRef:'day4_cubpup_1'},
+        {text:'Cub and Pup sit.', words:['Cub','and','Pup','sit.'], blankWord:'sit', imageRef:'day4_cubpup_1'},
+        {text:'A big bug runs in.', words:['A','big','bug','runs','in.'], blankWord:'bug', imageRef:'day4_cubpup_1'},
+        {text:'A bug! RUN!', words:['A','bug!','RUN!'], blankWord:'bug', imageRef:'day4_cubpup_2'},
+        {text:'Cub and Pup run.', words:['Cub','and','Pup','run.'], blankWord:'run', imageRef:'day4_cubpup_2'},
+        {text:'The bug sits on the rug.', words:['The','bug','sits','on','the','rug.'], blankWord:'rug', imageRef:'day4_cubpup_2'},
+        {text:'Not bad! I like this rug!', words:['Not','bad!','I','like','this','rug!'], blankWord:'rug', imageRef:'day4_cubpup_2'}
+      ]}
+    ]},
+    { id:5, title:'Day 5', stories:[
+      { id:'look', title:'Look!', images:['day5_look_1'], sentences:[
+        {text:'Look what bugs do.', words:['Look','what','bugs','do.'], blankWord:'bugs', imageRef:'day5_look_1'},
+        {text:'Bugs hop on hot dogs!', words:['Bugs','hop','on','hot','dogs!'], blankWord:'hop', imageRef:'day5_look_1'},
+        {text:'Look what cats do.', words:['Look','what','cats','do.'], blankWord:'cats', imageRef:'day5_look_1'},
+        {text:'Cats rip up rugs!', words:['Cats','rip','up','rugs!'], blankWord:'rip', imageRef:'day5_look_1'},
+        {text:'Look what dogs do.', words:['Look','what','dogs','do.'], blankWord:'dogs', imageRef:'day5_look_1'},
+        {text:'Dogs run in mud!', words:['Dogs','run','in','mud!'], blankWord:'mud', imageRef:'day5_look_1'},
+        {text:'Dads look at bugs.', words:['Dads','look','at','bugs.'], blankWord:'look', imageRef:'day5_look_1'},
+        {text:'Dads hug kids, dogs, and cats!', words:['Dads','hug','kids,','dogs,','and','cats!'], blankWord:'hug', imageRef:'day5_look_1'}
+      ]},
+      { id:'ned-and-ted', title:'Ned and Ted', images:['day5_nedted_1','day5_nedted_2'], sentences:[
+        {text:'This is Ned.', words:['This','is','Ned.'], blankWord:'Ned', imageRef:'day5_nedted_1'},
+        {text:'This is Ted.', words:['This','is','Ted.'], blankWord:'Ted', imageRef:'day5_nedted_1'},
+        {text:'Ned is big, but Ted is not.', words:['Ned','is','big,','but','Ted','is','not.'], blankWord:'big', imageRef:'day5_nedted_1'},
+        {text:'Ned and Ted run in the mud.', words:['Ned','and','Ted','run','in','the','mud.'], blankWord:'mud', imageRef:'day5_nedted_1'},
+        {text:'Ned and Ted hop in the tub.', words:['Ned','and','Ted','hop','in','the','tub.'], blankWord:'tub', imageRef:'day5_nedted_2'},
+        {text:'Ned and Ted sit in the sun.', words:['Ned','and','Ted','sit','in','the','sun.'], blankWord:'sun', imageRef:'day5_nedted_2'},
+        {text:'Ned and Ted hop in bed.', words:['Ned','and','Ted','hop','in','bed.'], blankWord:'bed', imageRef:'day5_nedted_2'},
+        {text:'ZZZZZZZ!', words:['ZZZZZZZ!'], blankWord:'ZZZZZZZ', imageRef:'day5_nedted_2'}
+      ]},
+      { id:'what-do-you-want', title:'What Do You Want?', images:['day5_whatdoyouwant_1','day5_whatdoyouwant_2'], sentences:[
+        {text:'What do you want?', words:['What','do','you','want?'], blankWord:'want', imageRef:'day5_whatdoyouwant_1'},
+        {text:'I want a cap for my dad.', words:['I','want','a','cap','for','my','dad.'], blankWord:'cap', imageRef:'day5_whatdoyouwant_1'},
+        {text:'My, my! What a cap!', words:['My,','my!','What','a','cap!'], blankWord:'cap', imageRef:'day5_whatdoyouwant_1'},
+        {text:'A fan for my mom.', words:['A','fan','for','my','mom.'], blankWord:'fan', imageRef:'day5_whatdoyouwant_1'},
+        {text:'A fan for you, Mom!', words:['A','fan','for','you,','Mom!'], blankWord:'fan', imageRef:'day5_whatdoyouwant_1'},
+        {text:'I want a bed for my dog.', words:['I','want','a','bed','for','my','dog.'], blankWord:'bed', imageRef:'day5_whatdoyouwant_2'},
+        {text:'This big bed is for us!', words:['This','big','bed','is','for','us!'], blankWord:'bed', imageRef:'day5_whatdoyouwant_2'}
+      ]}
+    ]}
+  ]
+};
+
+// ===== Story Book State =====
+let storyProgressCache = [];
+let homeworkCache = [];
+let currentStory = { dayId:null, storyId:null, mode:null, sentences:[], idx:0, score:0, total:0, correct:0 };
+let selectedWordEl = null;
+
+// ===== Home Tab Switching =====
+function switchHomeTab(tab) {
+  document.querySelectorAll('.home-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.home-tab[onclick*="${tab}"]`).classList.add('active');
+  document.getElementById('home-tab-words').classList.toggle('hidden', tab !== 'words');
+  document.getElementById('home-tab-storybook').classList.toggle('hidden', tab !== 'storybook');
+  if (tab === 'storybook') { loadStoryProgress(); }
+  if (tab === 'words') { renderReviewGrid(); }
+}
+
+// ===== Story Progress Loading =====
+async function loadStoryProgress() {
+  try {
+    const [spRes, hwRes] = await Promise.all([
+      fetch('/api/story/progress'), fetch('/api/homework')
+    ]);
+    storyProgressCache = await spRes.json();
+    homeworkCache = await hwRes.json();
+  } catch(e) {}
+  renderDayGrid();
+}
+
+function isModeDone(dayId, storyId, mode) {
+  return storyProgressCache.some(p => p.day_id === dayId && p.story_id === storyId && p.mode === mode && p.completed === 1);
+}
+
+function isDayUnlocked(dayId) {
+  if (dayId === 1) return true;
+  if (homeworkCache.some(h => h.hw_type === 'storybook' && h.hw_target === 'day_' + dayId)) return true;
+  const prevDay = STORY_DATA.days.find(d => d.id === dayId - 1);
+  if (!prevDay) return false;
+  return prevDay.stories.every(s => isModeDone(dayId - 1, s.id, 'read'));
+}
+
+function isDayCompleted(dayId) {
+  const day = STORY_DATA.days.find(d => d.id === dayId);
+  if (!day) return false;
+  return day.stories.every(s => ['read','fill','unscramble'].every(m => isModeDone(dayId, s.id, m)));
+}
+
+// ===== Day Grid =====
+function renderDayGrid() {
+  const grid = document.getElementById('day-grid');
+  if (!grid) return;
+  grid.innerHTML = STORY_DATA.days.map(day => {
+    const unlocked = isDayUnlocked(day.id);
+    const completed = isDayCompleted(day.id);
+    const assigned = homeworkCache.some(h => h.hw_type === 'storybook' && h.hw_target === 'day_' + day.id && !h.completed);
+    return `<div class="day-card ${unlocked ? '' : 'locked'} ${completed ? 'completed' : ''} ${assigned ? 'assigned' : ''}"
+         onclick="${unlocked ? `openDay(${day.id})` : ''}">
+      ${assigned ? '<span class="hw-badge">숙제</span>' : ''}
+      <div class="day-icon">${unlocked ? (completed ? '&#9989;' : '&#128214;') : '&#128274;'}</div>
+      <h3>${day.title}</h3>
+      <p>${day.stories.map(s => s.title).join(', ')}</p>
+      ${!unlocked ? '<p class="lock-msg">Day '+(day.id-1)+' 완료 후 열림</p>' : ''}
+    </div>`;
+  }).join('');
+}
+
+// ===== Open Day =====
+function openDay(dayId) {
+  const day = STORY_DATA.days.find(d => d.id === dayId);
+  if (!day) return;
+  document.getElementById('story-day-title').textContent = day.title + ' - ' + day.stories.map(s => s.title).join(', ');
+  const list = document.getElementById('story-day-list');
+  list.innerHTML = day.stories.map(story => {
+    const rd = isModeDone(dayId, story.id, 'read');
+    const fd = isModeDone(dayId, story.id, 'fill');
+    const ud = isModeDone(dayId, story.id, 'unscramble');
+    return `<div class="story-section">
+      <h3>${story.title}</h3>
+      <div class="mode-buttons">
+        <button class="btn-primary ${rd?'done':''}" onclick="startStoryMode(${dayId},'${story.id}','read')">
+          ${rd?'&#9989; ':''} Read Along
+        </button>
+        <button class="btn-secondary ${fd?'done':''}" onclick="startStoryMode(${dayId},'${story.id}','fill')">
+          ${fd?'&#9989; ':''} Fill in the Blank
+        </button>
+        <button class="btn-success ${ud?'done':''}" onclick="startStoryMode(${dayId},'${story.id}','unscramble')">
+          ${ud?'&#9989; ':''} Unscramble
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+  showScreen('story-day');
+}
+
+function backFromStory() {
+  if (currentStory.dayId) openDay(currentStory.dayId);
+  else { showScreen('home'); switchHomeTab('storybook'); }
+}
+
+// ===== Start Story Mode =====
+function startStoryMode(dayId, storyId, mode) {
+  const day = STORY_DATA.days.find(d => d.id === dayId);
+  const story = day.stories.find(s => s.id === storyId);
+  currentStory = { dayId, storyId, mode, sentences: story.sentences, idx: 0, score: 0, total: story.sentences.length, correct: 0, title: story.title };
+  if (mode === 'read') initStoryRead();
+  else if (mode === 'fill') initStoryFill();
+  else if (mode === 'unscramble') initStoryUnscramble();
+}
+
+// ===== MODE A: Read =====
+function initStoryRead() {
+  document.getElementById('story-read-title').textContent = currentStory.title + ' - Read Along';
+  currentStory.idx = 0;
+  renderReadSentence();
+  showScreen('story-read');
+}
+
+function renderReadSentence() {
+  const s = currentStory.sentences[currentStory.idx];
+  document.getElementById('story-read-text').textContent = s.text;
+  document.getElementById('story-read-img').src = '/static/images/storybook/' + s.imageRef + '.png';
+  document.getElementById('story-read-img').onerror = function(){ this.style.display='none'; };
+  document.getElementById('story-read-img').onload = function(){ this.style.display=''; };
+  document.getElementById('story-read-ind').textContent = `${currentStory.idx + 1} / ${currentStory.total}`;
+  document.getElementById('story-prev-btn').disabled = currentStory.idx === 0;
+  document.getElementById('story-next-btn').textContent = currentStory.idx >= currentStory.total - 1 ? '완료!' : '다음';
+}
+
+function storyReadPrev() { if (currentStory.idx > 0) { currentStory.idx--; renderReadSentence(); } }
+
+function storyReadNext() {
+  if (currentStory.idx >= currentStory.total - 1) {
+    saveStoryResult('read', currentStory.total, currentStory.total, 100);
+    return;
+  }
+  currentStory.idx++;
+  renderReadSentence();
+  speakSentence();
+}
+
+function speakSentence() {
+  const s = currentStory.sentences[currentStory.idx];
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const u = new SpeechSynthesisUtterance(s.text);
+    u.lang = 'en-US'; u.rate = 0.8; u.pitch = 1.0;
+    window.speechSynthesis.speak(u);
+  }
+}
+
+// ===== MODE B: Fill in the Blank =====
+function initStoryFill() {
+  currentStory.idx = 0; currentStory.score = 0; currentStory.correct = 0;
+  document.getElementById('fill-result').classList.add('hidden');
+  renderFillQuestion();
+  showScreen('story-fill');
+}
+
+function renderFillQuestion() {
+  if (currentStory.idx >= currentStory.total) { endFill(); return; }
+  const s = currentStory.sentences[currentStory.idx];
+  document.getElementById('fill-round').textContent = `${currentStory.idx + 1} / ${currentStory.total}`;
+  document.getElementById('fill-score').textContent = `${currentStory.score}점`;
+  document.getElementById('fill-img').src = '/static/images/storybook/' + s.imageRef + '.png';
+  document.getElementById('fill-img').onerror = function(){ this.style.display='none'; };
+  document.getElementById('fill-img').onload = function(){ this.style.display=''; };
+
+  // Build sentence with blank
+  const blankWord = s.blankWord;
+  let sentHtml = s.text.replace(new RegExp('\\b' + blankWord.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '\\b', 'i'),
+    '<span class="fill-blank" id="fill-target" onclick="fillTapBlank()">___</span>');
+  if (!sentHtml.includes('fill-target')) {
+    sentHtml = s.text.replace(blankWord, '<span class="fill-blank" id="fill-target" onclick="fillTapBlank()">___</span>');
+  }
+  document.getElementById('fill-sentence').innerHTML = sentHtml;
+
+  // Word bank: correct + distractors
+  const day = STORY_DATA.days.find(d => d.id === currentStory.dayId);
+  const allBlanks = day.stories.flatMap(st => st.sentences.map(sn => sn.blankWord));
+  let distractors = [...new Set(allBlanks)].filter(w => w.toLowerCase() !== blankWord.toLowerCase());
+  shuffle(distractors);
+  const options = [blankWord, ...distractors.slice(0, 3)];
+  shuffle(options);
+
+  document.getElementById('fill-bank').innerHTML = options.map(w =>
+    `<span class="word-option" data-word="${w}" onclick="fillTapWord(this)">${w}</span>`
+  ).join('');
+  selectedWordEl = null;
+}
+
+function fillTapWord(el) {
+  if (el.classList.contains('used')) return;
+  document.querySelectorAll('.word-option').forEach(w => w.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedWordEl = el;
+}
+
+function fillTapBlank() {
+  if (!selectedWordEl) return;
+  const target = document.getElementById('fill-target');
+  const selected = selectedWordEl.dataset.word;
+  const correct = currentStory.sentences[currentStory.idx].blankWord;
+
+  target.textContent = selected;
+  target.classList.add('filled');
+  selectedWordEl.classList.add('used');
+  selectedWordEl.classList.remove('selected');
+
+  if (selected.toLowerCase() === correct.toLowerCase()) {
+    target.classList.add('correct-blank');
+    currentStory.score += 10;
+    currentStory.correct++;
+  } else {
+    target.classList.add('wrong-blank');
+  }
+  selectedWordEl = null;
+  currentStory.idx++;
+  setTimeout(renderFillQuestion, 1200);
+}
+
+function endFill() {
+  const max = currentStory.total * 10;
+  const pct = Math.round((currentStory.score / max) * 100);
+  document.getElementById('fill-final-score').textContent = `${currentStory.score} / ${max}`;
+  document.getElementById('fill-final-msg').textContent = pct >= 80 ? '훌륭해요!' : pct >= 50 ? '잘했어요!' : '다시 도전해봐요!';
+  document.getElementById('fill-result').classList.remove('hidden');
+  saveStoryResult('fill', currentStory.correct, currentStory.total, currentStory.score);
+}
+
+// ===== MODE C: Unscramble =====
+function initStoryUnscramble() {
+  currentStory.idx = 0; currentStory.score = 0; currentStory.correct = 0;
+  document.getElementById('unscr-result').classList.add('hidden');
+  renderUnscrQuestion();
+  showScreen('story-unscramble');
+}
+
+function renderUnscrQuestion() {
+  if (currentStory.idx >= currentStory.total) { endUnscramble(); return; }
+  const s = currentStory.sentences[currentStory.idx];
+  document.getElementById('unscr-round').textContent = `${currentStory.idx + 1} / ${currentStory.total}`;
+  document.getElementById('unscr-score').textContent = `${currentStory.score}점`;
+  document.getElementById('unscr-img').src = '/static/images/storybook/' + s.imageRef + '.png';
+  document.getElementById('unscr-img').onerror = function(){ this.style.display='none'; };
+  document.getElementById('unscr-img').onload = function(){ this.style.display=''; };
+
+  // Drop slots
+  const dz = document.getElementById('unscr-dropzone');
+  dz.innerHTML = s.words.map((_, i) => `<div class="drop-slot" data-idx="${i}" onclick="unscrTapSlot(this)"></div>`).join('');
+
+  // Scrambled word bank
+  const scrambled = [...s.words];
+  shuffle(scrambled);
+  document.getElementById('unscr-bank').innerHTML = scrambled.map(w =>
+    `<span class="word-option" data-word="${w}" onclick="unscrTapWord(this)">${w}</span>`
+  ).join('');
+  selectedWordEl = null;
+}
+
+function unscrTapWord(el) {
+  if (el.classList.contains('used')) return;
+  document.querySelectorAll('#unscr-bank .word-option').forEach(w => w.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedWordEl = el;
+  // Auto-place in first empty slot
+  const emptySlot = document.querySelector('#unscr-dropzone .drop-slot:not(.filled)');
+  if (emptySlot) unscrPlaceWord(emptySlot);
+}
+
+function unscrTapSlot(slot) {
+  if (slot.classList.contains('filled')) {
+    // Return word to bank
+    const word = slot.dataset.word;
+    const bankEl = document.querySelector(`#unscr-bank .word-option.used[data-word="${word}"]`);
+    if (bankEl) { bankEl.classList.remove('used'); }
+    slot.textContent = '';
+    slot.dataset.word = '';
+    slot.classList.remove('filled');
+    return;
+  }
+  if (selectedWordEl) unscrPlaceWord(slot);
+}
+
+function unscrPlaceWord(slot) {
+  if (!selectedWordEl) return;
+  slot.textContent = selectedWordEl.dataset.word;
+  slot.dataset.word = selectedWordEl.dataset.word;
+  slot.classList.add('filled');
+  selectedWordEl.classList.add('used');
+  selectedWordEl.classList.remove('selected');
+  selectedWordEl = null;
+}
+
+function checkUnscramble() {
+  const s = currentStory.sentences[currentStory.idx];
+  const slots = document.querySelectorAll('#unscr-dropzone .drop-slot');
+  const allFilled = Array.from(slots).every(sl => sl.classList.contains('filled'));
+  if (!allFilled) { alert('모든 칸을 채워주세요!'); return; }
+
+  let correct = true;
+  slots.forEach((sl, i) => {
+    if (sl.dataset.word === s.words[i]) {
+      sl.classList.add('correct-slot');
+    } else {
+      sl.classList.add('wrong-slot');
+      correct = false;
+    }
+  });
+
+  if (correct) {
+    currentStory.score += 10;
+    currentStory.correct++;
+  }
+  currentStory.idx++;
+  setTimeout(() => {
+    slots.forEach(sl => { sl.classList.remove('correct-slot','wrong-slot'); });
+    renderUnscrQuestion();
+  }, 1500);
+}
+
+function endUnscramble() {
+  const max = currentStory.total * 10;
+  const pct = Math.round((currentStory.score / max) * 100);
+  document.getElementById('unscr-final-score').textContent = `${currentStory.score} / ${max}`;
+  document.getElementById('unscr-final-msg').textContent = pct >= 80 ? '문장 달인이에요!' : pct >= 50 ? '좋아요!' : '다시 도전해봐요!';
+  document.getElementById('unscr-result').classList.remove('hidden');
+  saveStoryResult('unscramble', currentStory.correct, currentStory.total, currentStory.score);
+}
+
+// ===== Save Story Result =====
+async function saveStoryResult(mode, correct, total, score) {
+  try {
+    await fetch('/api/story/progress', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ day_id:currentStory.dayId, story_id:currentStory.storyId, mode, score, total, completed:1 })
+    });
+    // Check if homework should be auto-completed
+    await checkHomeworkCompletion();
+    // Refresh cache
+    const res = await fetch('/api/story/progress');
+    storyProgressCache = await res.json();
+  } catch(e) {}
+}
+
+async function checkHomeworkCompletion() {
+  for (const hw of homeworkCache) {
+    if (hw.completed) continue;
+    if (hw.hw_type === 'storybook') {
+      const dayNum = parseInt(hw.hw_target.replace('day_',''));
+      if (isDayCompleted(dayNum)) {
+        await fetch(`/api/homework/${hw.id}/complete`, {method:'POST'});
+        hw.completed = 1;
+      }
+    }
+  }
+}
+
+// ===== Homework Tab (Student) =====
+async function loadHomework() {
+  try {
+    const [hwRes, spRes, progRes] = await Promise.all([
+      fetch('/api/homework'), fetch('/api/story/progress'), fetch('/api/progress')
+    ]);
+    homeworkCache = await hwRes.json();
+    storyProgressCache = await spRes.json();
+    const progData = await progRes.json();
+    renderHomework(progData);
+  } catch(e) {}
+}
+
+function renderHomework(progData) {
+  const list = document.getElementById('hw-list');
+  const pending = homeworkCache.filter(h => !h.completed);
+  const done = homeworkCache.filter(h => h.completed);
+
+  let html = '';
+  if (pending.length) {
+    html += '<div class="hw-section"><h3>미완료 과제</h3>';
+    html += pending.map(h => renderHwCard(h, progData)).join('');
+    html += '</div>';
+  }
+  if (done.length) {
+    html += '<div class="hw-section"><h3>완료된 과제</h3>';
+    html += done.map(h => renderHwCard(h, progData)).join('');
+    html += '</div>';
+  }
+  if (!pending.length && !done.length) {
+    html = '<div style="text-align:center;padding:60px;color:var(--text-light)"><p style="font-size:48px;margin-bottom:16px">&#128516;</p><p>배정된 과제가 없습니다!</p></div>';
+  }
+  list.innerHTML = html;
+}
+
+function renderHwCard(hw, progData) {
+  const isDone = hw.completed;
+  let detailHtml = '';
+  let goAction = '';
+
+  if (hw.hw_type === 'storybook') {
+    const dayNum = parseInt(hw.hw_target.replace('day_',''));
+    const day = STORY_DATA.days.find(d => d.id === dayNum);
+    if (day) {
+      const modeStatus = day.stories.map(s => {
+        const rd = isModeDone(dayNum, s.id, 'read');
+        const fd = isModeDone(dayNum, s.id, 'fill');
+        const ud = isModeDone(dayNum, s.id, 'unscramble');
+        return `<span style="font-size:11px">${s.title}: ${rd?'&#9989;':'&#10060;'}R ${fd?'&#9989;':'&#10060;'}F ${ud?'&#9989;':'&#10060;'}U</span>`;
+      }).join('<br>');
+      detailHtml = modeStatus;
+    }
+    goAction = `openDay(${dayNum})`;
+  } else {
+    // Words homework
+    const target = hw.hw_target;
+    const matching = (progData.history || []).filter(p => {
+      if (target.startsWith('gameshow_')) return p.activity.includes('듣기') && p.activity.includes('Lv' + target.split('_')[1]);
+      if (target.startsWith('spelling_')) return p.activity.includes('스펠링') && p.activity.includes('Lv' + target.split('_')[1]);
+      if (target.startsWith('review_')) return p.activity.includes('복습') && p.activity.includes(target.split('_')[1]);
+      return false;
+    });
+    if (matching.length) {
+      detailHtml = `최근 점수: ${matching[0].score}점`;
+    } else {
+      detailHtml = '아직 미완료';
+    }
+    if (target.startsWith('gameshow_')) goAction = `changeGsLevel('${target.split('_')[1]}');showScreen('gameshow')`;
+    else if (target.startsWith('spelling_')) goAction = `changeSpLevel('${target.split('_')[1]}');showScreen('spelling')`;
+    else if (target.startsWith('review_')) {
+      const rIdx = parseInt(target.split('_')[1]) - 1;
+      if (REVIEWS[rIdx]) goAction = `startReview(${JSON.stringify(REVIEWS[rIdx].levels)},'${REVIEWS[rIdx].label}')`;
+    }
+  }
+
+  const dueStr = hw.due_date ? `마감: ${hw.due_date}` : '';
+  const icon = hw.hw_type === 'storybook' ? '&#128214;' : '&#127918;';
+
+  return `<div class="hw-card ${isDone ? 'done' : 'pending'}">
+    <div class="hw-icon">${icon}</div>
+    <div class="hw-info">
+      <h4>${hw.hw_label}</h4>
+      <div class="hw-detail">${detailHtml}</div>
+      <div class="hw-detail">${dueStr}</div>
+    </div>
+    <div>
+      <span class="hw-status ${isDone ? 'complete' : 'incomplete'}">${isDone ? '&#9989; 완료' : '&#10060; 미완료'}</span>
+      ${!isDone && goAction ? `<button class="btn-primary btn-sm hw-go-btn" style="margin-top:6px" onclick="${goAction}">학습하기</button>` : ''}
+    </div>
+  </div>`;
+}
+
+// ===== Teacher: Homework Assignment =====
+function renderHwAssignUI(studentId, studentName) {
+  const levels = [1,2,3,4,5,6];
+  const activities = [{key:'gameshow',label:'듣기 퀴즈'},{key:'spelling',label:'스펠링'}];
+  const days = [1,2,3,4,5];
+
+  let html = `<div class="hw-assign-section" id="hw-assign-${studentId}">
+    <h4>${studentName} - 과제 배정</h4>
+    <div class="hw-assign-row">
+      <label>Words:</label>
+      <select id="hw-activity-${studentId}">
+        ${activities.map(a => `<option value="${a.key}">${a.label}</option>`).join('')}
+      </select>
+      <select id="hw-level-${studentId}">
+        ${levels.map(l => `<option value="${l}">Level ${l}</option>`).join('')}
+      </select>
+      <input type="date" id="hw-due-w-${studentId}" style="padding:6px;border-radius:6px;border:1px solid #ccc">
+      <button class="btn-primary btn-sm" onclick="assignWordsHw(${studentId})">배정</button>
+    </div>
+    <div class="hw-assign-row">
+      <label>복습:</label>
+      <select id="hw-review-${studentId}">
+        ${REVIEWS.map((r, i) => `<option value="${i}">${r.label} (${getReviewWords(r.levels).length}개)</option>`).join('')}
+      </select>
+      <input type="date" id="hw-due-r-${studentId}" style="padding:6px;border-radius:6px;border:1px solid #ccc">
+      <button class="btn-primary btn-sm" onclick="assignReviewHw(${studentId})">배정</button>
+    </div>
+    <div class="hw-assign-row">
+      <label>Story:</label>
+      ${days.map(d => `<button class="hw-toggle" onclick="assignStoryHw(${studentId},${d},this)">Day ${d}</button>`).join(' ')}
+      <input type="date" id="hw-due-s-${studentId}" style="padding:6px;border-radius:6px;border:1px solid #ccc">
+    </div>
+    <div id="hw-current-${studentId}" style="margin-top:12px"></div>
+  </div>`;
+  return html;
+}
+
+async function assignWordsHw(studentId) {
+  const activity = document.getElementById(`hw-activity-${studentId}`).value;
+  const level = document.getElementById(`hw-level-${studentId}`).value;
+  const due = document.getElementById(`hw-due-w-${studentId}`).value || null;
+  const label = (activity === 'gameshow' ? '듣기 퀴즈' : '스펠링') + ' Level ' + level;
+  await fetch('/api/homework', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ student_id:studentId, hw_type:'words', hw_target:`${activity}_lv${level}`, hw_label:label, due_date:due })
+  });
+  alert('과제가 배정되었습니다!');
+  loadStudents();
+}
+
+async function assignReviewHw(studentId) {
+  const rIdx = parseInt(document.getElementById(`hw-review-${studentId}`).value);
+  const due = document.getElementById(`hw-due-r-${studentId}`).value || null;
+  const r = REVIEWS[rIdx];
+  const label = `복습 ${r.label}`;
+  await fetch('/api/homework', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ student_id:studentId, hw_type:'words', hw_target:`review_${rIdx+1}`, hw_label:label, due_date:due })
+  });
+  alert('복습 과제가 배정되었습니다!');
+  loadStudents();
+}
+
+async function assignStoryHw(studentId, dayId, btn) {
+  const due = document.getElementById(`hw-due-s-${studentId}`).value || null;
+  const label = `Story Book Day ${dayId}`;
+  const res = await fetch('/api/homework', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ student_id:studentId, hw_type:'storybook', hw_target:`day_${dayId}`, hw_label:label, due_date:due })
+  });
+  const data = await res.json();
+  if (res.ok) { btn.classList.add('active'); alert('스토리 과제가 배정되었습니다!'); }
+  else alert(data.error || '오류');
+}
+
+async function deleteHw(hwId) {
+  if (!confirm('이 과제를 삭제하시겠습니까?')) return;
+  await fetch(`/api/homework/${hwId}`, {method:'DELETE'});
+  loadStudents();
+}
+
+function toggleHwAssign(studentId, name) {
+  const container = document.getElementById(`hw-container-${studentId}`);
+  if (container.classList.contains('hidden')) {
+    container.innerHTML = renderHwAssignUI(studentId, name);
+    container.classList.remove('hidden');
+    loadStudentHwStatus(studentId);
+  } else {
+    container.classList.add('hidden');
+    container.innerHTML = '';
+  }
+}
+
+async function loadStudentHwStatus(studentId) {
+  try {
+    const res = await fetch(`/api/student/${studentId}/story-progress`);
+    const data = await res.json();
+    const el = document.getElementById(`hw-current-${studentId}`);
+    if (!el) return;
+    if (!data.homework.length) {
+      el.innerHTML = '<p style="font-size:12px;color:var(--text-light)">배정된 과제 없음</p>';
+      return;
+    }
+    el.innerHTML = '<h4 style="font-size:13px;margin-bottom:8px">현재 과제:</h4>' +
+      data.homework.map(h => `<div style="display:flex;align-items:center;gap:8px;margin:4px 0;font-size:12px">
+        <span>${h.completed ? '&#9989;' : '&#10060;'}</span>
+        <span>${h.hw_label}</span>
+        ${h.due_date ? `<span style="color:var(--text-light)">마감: ${h.due_date}</span>` : ''}
+        <button class="btn-warning btn-sm" style="padding:2px 8px;font-size:11px" onclick="deleteHw(${h.id})">삭제</button>
+      </div>`).join('');
+  } catch(e) {}
+}
+
+// Also update viewStudent to show homework
+async function viewStudentFull(id) {
+  try {
+    const [progRes, storyRes] = await Promise.all([
+      fetch(`/api/student/${id}/progress`),
+      fetch(`/api/student/${id}/story-progress`)
+    ]);
+    const progData = await progRes.json();
+    const storyData = await storyRes.json();
+    document.getElementById('sd-name').textContent = progData.student.name + ' 학생';
+    renderStudentDetail(progData.summary, progData.history);
+    // Add homework section
+    const hwSection = document.getElementById('sd-homework-section');
+    if (storyData.homework && storyData.homework.length) {
+      hwSection.innerHTML = '<h3>과제 현황</h3>' +
+        storyData.homework.map(h => `<div style="display:flex;align-items:center;gap:12px;padding:8px;margin:4px 0;background:var(--card);border-radius:8px;box-shadow:var(--shadow)">
+          <span style="font-size:20px">${h.completed ? '&#9989;' : '&#10060;'}</span>
+          <div style="flex:1"><strong>${h.hw_label}</strong><br><span style="font-size:12px;color:var(--text-light)">${h.due_date ? '마감: '+h.due_date : ''} ${h.completed_at ? '완료: '+new Date(h.completed_at).toLocaleDateString('ko-KR') : ''}</span></div>
+        </div>`).join('');
+    } else {
+      hwSection.innerHTML = '';
+    }
+    showScreen('student-detail');
+  } catch(e) {}
 }
 
 // ===== Init =====

@@ -56,6 +56,30 @@ def init_db():
             completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY(user_id) REFERENCES users(id)
         );
+        CREATE TABLE IF NOT EXISTS story_progress (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            day_id INTEGER NOT NULL,
+            story_id TEXT NOT NULL,
+            mode TEXT NOT NULL,
+            score INTEGER DEFAULT 0,
+            total INTEGER DEFAULT 0,
+            completed INTEGER DEFAULT 0,
+            completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY(user_id) REFERENCES users(id)
+        );
+        CREATE TABLE IF NOT EXISTS homework (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id INTEGER NOT NULL,
+            hw_type TEXT NOT NULL,
+            hw_target TEXT NOT NULL,
+            hw_label TEXT NOT NULL,
+            assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            due_date TEXT,
+            completed INTEGER DEFAULT 0,
+            completed_at TIMESTAMP,
+            FOREIGN KEY(student_id) REFERENCES users(id)
+        );
     ''')
     existing = db.execute("SELECT id FROM users WHERE role='teacher'").fetchone()
     if not existing:
@@ -191,6 +215,8 @@ def add_student():
 def delete_student(sid):
     db = get_db()
     db.execute("DELETE FROM progress WHERE user_id=?", (sid,))
+    db.execute("DELETE FROM story_progress WHERE user_id=?", (sid,))
+    db.execute("DELETE FROM homework WHERE student_id=?", (sid,))
     db.execute("DELETE FROM users WHERE id=? AND role='student'", (sid,))
     db.commit()
     db.close()
@@ -279,6 +305,132 @@ def student_progress(sid):
         'history': [dict(r) for r in rows],
         'summary': [dict(s) for s in summary]
     })
+
+
+# ===== Story Progress =====
+@app.route('/api/story/progress', methods=['GET'])
+@login_required
+def get_story_progress():
+    uid = request.args.get('user_id', session['user_id'], type=int)
+    if uid != session['user_id'] and session.get('role') != 'teacher':
+        return jsonify({'error': '권한 없음'}), 403
+    db = get_db()
+    rows = db.execute(
+        "SELECT day_id, story_id, mode, score, total, completed, completed_at "
+        "FROM story_progress WHERE user_id=? ORDER BY completed_at DESC", (uid,)
+    ).fetchall()
+    db.close()
+    return jsonify([dict(r) for r in rows])
+
+
+@app.route('/api/story/progress', methods=['POST'])
+@login_required
+def save_story_progress():
+    data = request.get_json(force=True, silent=True) or {}
+    db = get_db()
+    db.execute(
+        "INSERT INTO story_progress (user_id, day_id, story_id, mode, score, total, completed) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (session['user_id'], data.get('day_id'), data.get('story_id'),
+         data.get('mode'), data.get('score', 0), data.get('total', 0), data.get('completed', 0))
+    )
+    db.commit()
+    db.close()
+    return jsonify({'ok': True})
+
+
+# ===== Homework =====
+@app.route('/api/homework', methods=['GET'])
+@login_required
+def get_homework():
+    uid = request.args.get('user_id', session['user_id'], type=int)
+    if uid != session['user_id'] and session.get('role') != 'teacher':
+        return jsonify({'error': '권한 없음'}), 403
+    db = get_db()
+    rows = db.execute(
+        "SELECT id, student_id, hw_type, hw_target, hw_label, assigned_at, due_date, completed, completed_at "
+        "FROM homework WHERE student_id=? ORDER BY assigned_at DESC", (uid,)
+    ).fetchall()
+    db.close()
+    return jsonify([dict(r) for r in rows])
+
+
+@app.route('/api/homework', methods=['POST'])
+@teacher_required
+def assign_homework():
+    data = request.get_json(force=True, silent=True) or {}
+    student_id = data.get('student_id')
+    hw_type = data.get('hw_type')
+    hw_target = data.get('hw_target')
+    hw_label = data.get('hw_label')
+    due_date = data.get('due_date')
+    if not student_id or not hw_type or not hw_target:
+        return jsonify({'error': '필수 항목 누락'}), 400
+    db = get_db()
+    existing = db.execute(
+        "SELECT id FROM homework WHERE student_id=? AND hw_type=? AND hw_target=? AND completed=0",
+        (student_id, hw_type, hw_target)
+    ).fetchone()
+    if existing:
+        db.close()
+        return jsonify({'error': '이미 같은 과제가 배정되어 있습니다'}), 400
+    db.execute(
+        "INSERT INTO homework (student_id, hw_type, hw_target, hw_label, due_date) VALUES (?, ?, ?, ?, ?)",
+        (student_id, hw_type, hw_target, hw_label, due_date)
+    )
+    db.commit()
+    db.close()
+    return jsonify({'ok': True})
+
+
+@app.route('/api/homework/<int:hw_id>', methods=['DELETE'])
+@teacher_required
+def delete_homework(hw_id):
+    db = get_db()
+    db.execute("DELETE FROM homework WHERE id=?", (hw_id,))
+    db.commit()
+    db.close()
+    return jsonify({'ok': True})
+
+
+@app.route('/api/homework/<int:hw_id>/complete', methods=['POST'])
+@login_required
+def complete_homework(hw_id):
+    db = get_db()
+    db.execute(
+        "UPDATE homework SET completed=1, completed_at=CURRENT_TIMESTAMP WHERE id=?", (hw_id,)
+    )
+    db.commit()
+    db.close()
+    return jsonify({'ok': True})
+
+
+@app.route('/api/homework/all', methods=['GET'])
+@teacher_required
+def get_all_homework():
+    db = get_db()
+    rows = db.execute(
+        "SELECT h.*, u.name as student_name FROM homework h "
+        "JOIN users u ON h.student_id=u.id ORDER BY h.assigned_at DESC"
+    ).fetchall()
+    db.close()
+    return jsonify([dict(r) for r in rows])
+
+
+@app.route('/api/student/<int:sid>/story-progress')
+@teacher_required
+def student_story_progress(sid):
+    db = get_db()
+    progress = db.execute(
+        "SELECT day_id, story_id, mode, score, total, completed, completed_at "
+        "FROM story_progress WHERE user_id=? ORDER BY completed_at DESC", (sid,)
+    ).fetchall()
+    hw = db.execute(
+        "SELECT id, hw_type, hw_target, hw_label, due_date, completed, completed_at "
+        "FROM homework WHERE student_id=? ORDER BY assigned_at DESC", (sid,)
+    ).fetchall()
+    db.close()
+    return jsonify({'progress': [dict(r) for r in progress], 'homework': [dict(r) for r in hw]})
 
 
 # ===== Data APIs =====
