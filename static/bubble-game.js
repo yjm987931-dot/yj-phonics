@@ -370,7 +370,7 @@ class BubbleGame {
 
     const tb = document.getElementById('bubbleTargetBar');
     tb.style.display = 'flex';
-    document.getElementById('bubbleTargetWord').textContent = this.currentSet.target.toUpperCase();
+    document.getElementById('bubbleTargetWord').textContent = '???';
     document.getElementById('bubbleQCount').textContent = `${this.currentQuestion + 1}/${this.totalQuestions}`;
     this._updateHUD();
 
@@ -431,7 +431,7 @@ class BubbleGame {
         this.wrongWords.push(this.currentSet.target);
       }
       bubble.pop(this.particles);
-      this._showFeedback(false, bubble.word + ' ≠ ' + this.currentSet.target);
+      this._showFeedback(false, 'MISS!');
       setTimeout(() => {
         if (this.lives <= 0) this._endGame();
         else { this.canShoot = true; this._speakWord(this.currentSet.target); }
