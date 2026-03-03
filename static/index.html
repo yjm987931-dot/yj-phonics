@@ -1681,52 +1681,31 @@ function storyReadNext() {
   speakSentence();
 }
 
+// 문장 TTS (Google TTS 오디오 → Web Speech API 폴백, Android+iOS 모두 지원)
+let storyAudio = null;
 function speakSentence() {
   const s = currentStory.sentences[currentStory.idx];
   if (!s) return;
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(s.text);
-    u.lang = 'en-US'; u.rate = 0.8; u.pitch = 1.0;
-    // 모바일 음성 선택 (영어 음성 우선)
-    const voices = window.speechSynthesis.getVoices();
-    const enVoice = voices.find(v => v.lang === 'en-US') || voices.find(v => v.lang.startsWith('en'));
-    if (enVoice) u.voice = enVoice;
-    window.speechSynthesis.speak(u);
-    // iOS 자동 일시정지 방지
-    if (/iPhone|iPad/i.test(navigator.userAgent)) {
-      const keepAlive = setInterval(() => {
-        if (!window.speechSynthesis.speaking) { clearInterval(keepAlive); return; }
-        window.speechSynthesis.pause();
-        window.speechSynthesis.resume();
-      }, 5000);
-      u.onend = () => clearInterval(keepAlive);
-      u.onerror = () => clearInterval(keepAlive);
-    }
-  }
-}
-
-// 모바일 TTS 초기화 (첫 터치로 오디오 컨텍스트 활성화)
-(function() {
-  let ttsReady = false;
-  function warmUpTTS() {
-    if (ttsReady) return;
-    ttsReady = true;
+  const text = s.text;
+  // 이전 오디오 정리
+  if (storyAudio) { storyAudio.pause(); storyAudio = null; }
+  // 방법 1: Google TTS (가장 안정적, 모바일 100% 호환)
+  const url = 'https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=' + encodeURIComponent(text);
+  storyAudio = new Audio(url);
+  storyAudio.playbackRate = 0.9;
+  storyAudio.play().catch(() => {
+    // 방법 2: Web Speech API 폴백
     if ('speechSynthesis' in window) {
-      window.speechSynthesis.getVoices();
-      const u = new SpeechSynthesisUtterance('');
-      u.volume = 0;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US'; u.rate = 0.8; u.pitch = 1.0;
+      const voices = window.speechSynthesis.getVoices();
+      const enVoice = voices.find(v => v.lang === 'en-US') || voices.find(v => v.lang.startsWith('en'));
+      if (enVoice) u.voice = enVoice;
       window.speechSynthesis.speak(u);
     }
-  }
-  document.addEventListener('click', warmUpTTS, {once: true});
-  document.addEventListener('touchstart', warmUpTTS, {once: true});
-  // 음성 목록 사전 로드
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.getVoices();
-    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
-  }
-})();
+  });
+}
 
 // ===== MODE B: Fill in the Blank =====
 function initStoryFill() {
