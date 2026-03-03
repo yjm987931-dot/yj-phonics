@@ -47,6 +47,26 @@ input:focus { border-color:var(--primary); }
 .btn-sm { padding:6px 14px; font-size:13px; }
 .hidden { display:none !important; }
 
+/* ===== In-App Browser Warning ===== */
+#inapp-overlay { position:fixed; inset:0; z-index:9999; background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); display:flex; align-items:center; justify-content:center; }
+.inapp-box { background:#fff; border-radius:24px; padding:40px 32px; max-width:360px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+.inapp-box h2 { font-size:22px; margin-bottom:12px; color:#2D3436; }
+.inapp-box p { font-size:14px; color:#636E72; line-height:1.6; margin-bottom:16px; }
+.inapp-box .step { background:#F0F2FF; padding:12px 16px; border-radius:12px; margin:8px 0; font-size:14px; text-align:left; }
+.inapp-box .step b { color:#6C63FF; }
+.inapp-btn { display:block; width:100%; padding:14px; font-size:16px; font-weight:700; border:none; border-radius:12px; cursor:pointer; margin-top:12px; }
+.inapp-btn-primary { background:#6C63FF; color:#fff; }
+.inapp-btn-copy { background:#E8E6FF; color:#6C63FF; }
+
+/* ===== Add to Home Screen Guide ===== */
+#homescreen-guide { position:fixed; inset:0; z-index:9998; background:rgba(0,0,0,0.7); display:flex; align-items:center; justify-content:center; }
+.hs-box { background:#fff; border-radius:24px; padding:36px 28px; max-width:340px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+.hs-box h2 { font-size:20px; margin-bottom:8px; color:#2D3436; }
+.hs-box p { font-size:13px; color:#636E72; line-height:1.6; }
+.hs-step { background:#F0F2FF; padding:12px 16px; border-radius:12px; margin:10px 0; font-size:14px; text-align:left; }
+.hs-step b { color:#6C63FF; }
+.hs-skip { background:none; border:none; color:#999; font-size:13px; margin-top:12px; cursor:pointer; text-decoration:underline; }
+
 /* ===== Login ===== */
 #login-screen { display:flex; justify-content:center; align-items:center; min-height:100vh; background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); }
 .login-box { background:#fff; padding:48px 40px; border-radius:24px; box-shadow:0 20px 60px rgba(0,0,0,0.2); width:380px; text-align:center; }
@@ -354,6 +374,42 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
 </style>
 </head>
 <body>
+
+<!-- ===== In-App Browser Warning (카톡 등) ===== -->
+<div id="inapp-overlay" style="display:none">
+  <div class="inapp-box">
+    <h2>&#127760; 브라우저에서 열어주세요</h2>
+    <p>카카오톡 안에서는 정상 작동하지 않아요.<br>아래 방법으로 브라우저에서 열어주세요!</p>
+    <div id="inapp-android">
+      <button class="inapp-btn inapp-btn-primary" onclick="openExternal()">Chrome에서 열기</button>
+    </div>
+    <div id="inapp-ios" style="display:none">
+      <div class="step"><b>1.</b> 오른쪽 아래 <b>&#8942;</b> (점 세개) 누르기</div>
+      <div class="step"><b>2.</b> <b>"다른 브라우저로 열기"</b> 또는 <b>"Safari로 열기"</b> 누르기</div>
+    </div>
+    <button class="inapp-btn inapp-btn-copy" onclick="copyUrl()">링크 복사하기</button>
+    <p id="inapp-copied" style="color:#06D6A0;font-size:12px;margin-top:6px;display:none">복사 완료!</p>
+  </div>
+</div>
+
+<!-- ===== Add to Home Screen Guide ===== -->
+<div id="homescreen-guide" style="display:none">
+  <div class="hs-box">
+    <h2>&#128241; 바로가기를 만들어주세요!</h2>
+    <p>홈 화면에 추가하면 앱처럼 바로 실행할 수 있어요</p>
+    <div id="hs-ios-guide" style="display:none">
+      <div class="hs-step"><b>1.</b> 아래 <b>&#9776;</b> 공유 버튼 누르기</div>
+      <div class="hs-step"><b>2.</b> <b>"홈 화면에 추가"</b> 누르기</div>
+      <div class="hs-step"><b>3.</b> <b>"추가"</b> 누르기</div>
+    </div>
+    <div id="hs-android-guide" style="display:none">
+      <div class="hs-step"><b>1.</b> 오른쪽 위 <b>&#8942;</b> (점 세개) 누르기</div>
+      <div class="hs-step"><b>2.</b> <b>"홈 화면에 추가"</b> 또는 <b>"앱 설치"</b> 누르기</div>
+    </div>
+    <button class="inapp-btn inapp-btn-primary" onclick="dismissHomeGuide(false)">확인! 나중에 할게요</button>
+    <button class="hs-skip" onclick="dismissHomeGuide(true)">다시 보지 않기</button>
+  </div>
+</div>
 
 <!-- ===== Login Screen ===== -->
 <div id="login-screen">
@@ -990,6 +1046,7 @@ async function doStudentLogin() {
     setupNav();
     showStudentDashboard();
     loadMediaInfo();
+    showHomeGuideIfNeeded();
   } catch(e) { errEl.textContent = '서버 연결 실패'; }
 }
 
@@ -2481,6 +2538,72 @@ async function viewStudentFull(id) {
     showScreen('student-detail');
   } catch(e) {}
 }
+
+// ===== In-App Browser Detection & Home Screen Guide =====
+function isInAppBrowser() {
+  const ua = navigator.userAgent || '';
+  return /KAKAOTALK|NAVER|Instagram|FBAV|FB_IAB|Line\//i.test(ua);
+}
+function isIOS() { return /iPhone|iPad|iPod/i.test(navigator.userAgent); }
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches ||
+         window.matchMedia('(display-mode: minimal-ui)').matches ||
+         window.navigator.standalone === true;
+}
+
+function openExternal() {
+  const url = location.href;
+  // Android intent → Chrome
+  location.href = 'intent://' + url.replace(/^https?:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;end;';
+}
+
+function copyUrl() {
+  const url = location.href;
+  const show = () => {
+    const el = document.getElementById('inapp-copied');
+    el.style.display = '';
+    setTimeout(() => { el.style.display = 'none'; }, 2000);
+  };
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(show).catch(show);
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = url; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta); show();
+  }
+}
+
+function dismissHomeGuide(permanent) {
+  document.getElementById('homescreen-guide').style.display = 'none';
+  if (permanent) localStorage.setItem('yj_hs_never', '1');
+}
+
+function showHomeGuideIfNeeded() {
+  if (isStandalone()) return;
+  if (isInAppBrowser()) return; // 인앱이면 이미 인앱 오버레이 표시 중
+  if (localStorage.getItem('yj_hs_never') === '1') return;
+  const guide = document.getElementById('homescreen-guide');
+  if (isIOS()) {
+    document.getElementById('hs-ios-guide').style.display = '';
+    document.getElementById('hs-android-guide').style.display = 'none';
+  } else {
+    document.getElementById('hs-ios-guide').style.display = 'none';
+    document.getElementById('hs-android-guide').style.display = '';
+  }
+  guide.style.display = '';
+}
+
+// 인앱 브라우저 감지 → 오버레이 표시
+(function() {
+  if (isInAppBrowser()) {
+    const ov = document.getElementById('inapp-overlay');
+    if (isIOS()) {
+      document.getElementById('inapp-android').style.display = 'none';
+      document.getElementById('inapp-ios').style.display = '';
+    }
+    ov.style.display = '';
+  }
+})();
 
 // ===== PWA Service Worker =====
 if ('serviceWorker' in navigator) {
