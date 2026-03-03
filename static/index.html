@@ -562,7 +562,7 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
         <div class="round" id="fill-round">1 / 8</div>
         <div class="score" id="fill-score">0점</div>
       </div>
-      <!-- 이미지 숨김: 학생이 스스로 생각하도록 -->
+      <div class="story-image-container"><img id="fill-img" src="" alt="Story" style="max-height:200px;border-radius:12px"></div>
       <div class="fill-sentence" id="fill-sentence"></div>
       <div class="word-bank" id="fill-bank"></div>
     </div>
@@ -585,7 +585,7 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
         <div class="round" id="unscr-round">1 / 8</div>
         <div class="score" id="unscr-score">0점</div>
       </div>
-      <!-- 이미지 숨김: 학생이 스스로 생각하도록 -->
+      <div class="story-image-container"><img id="unscr-img" src="" alt="Story" style="max-height:200px;border-radius:12px"></div>
       <div class="drop-zone" id="unscr-dropzone"></div>
       <div class="scramble-bank" id="unscr-bank"></div>
       <div style="text-align:center;margin-top:16px">
@@ -1715,7 +1715,10 @@ function renderFillQuestion() {
   const s = currentStory.sentences[currentStory.idx];
   document.getElementById('fill-round').textContent = `${currentStory.idx + 1} / ${currentStory.total}`;
   document.getElementById('fill-score').textContent = `${currentStory.score}점`;
-  // 이미지 제거됨 (Fill mode)
+  const fillImg = document.getElementById('fill-img');
+  fillImg.src = '/static/images/storybook/' + s.imageRef + '.png';
+  fillImg.onerror = function(){ this.style.display='none'; };
+  fillImg.onload = function(){ this.style.display=''; };
 
   // Build sentence with blank
   const blankWord = s.blankWord;
@@ -1792,7 +1795,10 @@ function renderUnscrQuestion() {
   const s = currentStory.sentences[currentStory.idx];
   document.getElementById('unscr-round').textContent = `${currentStory.idx + 1} / ${currentStory.total}`;
   document.getElementById('unscr-score').textContent = `${currentStory.score}점`;
-  // 이미지 제거됨 (Unscramble mode)
+  const unscrImg = document.getElementById('unscr-img');
+  unscrImg.src = '/static/images/storybook/' + s.imageRef + '.png';
+  unscrImg.onerror = function(){ this.style.display='none'; };
+  unscrImg.onload = function(){ this.style.display=''; };
 
   // Drop slots
   const dz = document.getElementById('unscr-dropzone');
