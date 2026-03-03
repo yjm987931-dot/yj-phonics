@@ -361,10 +361,24 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
     <h1>YJ-Phonics</h1>
     <p>파닉스 학습 프로그램에 오신 것을 환영합니다</p>
     <div class="login-error" id="login-error"></div>
-    <input type="text" id="login-username" placeholder="아이디" autocomplete="username">
-    <input type="password" id="login-password" placeholder="비밀번호" autocomplete="current-password">
-    <button class="btn-primary" onclick="doLogin()">로그인</button>
-    <p style="margin-top:16px;font-size:12px;color:#999">선생님 첫 로그인: teacher / teacher1234</p>
+
+    <!-- 학생: 4자리 코드 로그인 -->
+    <div id="login-student-mode">
+      <input type="text" id="login-code" placeholder="학생 코드 (4자리)" maxlength="4" inputmode="numeric" pattern="[0-9]*" style="text-align:center;font-size:24px;letter-spacing:8px;font-weight:700">
+      <button class="btn-primary" onclick="doStudentLogin()">학생 로그인</button>
+    </div>
+
+    <div style="margin:16px 0;display:flex;align-items:center;gap:8px">
+      <hr style="flex:1;border:none;border-top:1px solid #e0e0e0"><span style="color:#999;font-size:12px">선생님</span><hr style="flex:1;border:none;border-top:1px solid #e0e0e0">
+    </div>
+
+    <!-- 선생님: 아이디/비밀번호 로그인 -->
+    <div id="login-teacher-mode" style="display:none">
+      <input type="text" id="login-username" placeholder="아이디" autocomplete="username">
+      <input type="password" id="login-password" placeholder="비밀번호" autocomplete="current-password">
+      <button class="btn-primary" onclick="doLogin()">선생님 로그인</button>
+    </div>
+    <button class="btn-outline btn-sm" onclick="toggleTeacherLogin()" id="teacher-toggle-btn" style="margin-top:8px">선생님 로그인</button>
   </div>
 </div>
 
@@ -935,7 +949,50 @@ function speak(word) {
   });
 }
 
+// ===== Device ID =====
+function getDeviceId() {
+  let did = localStorage.getItem('yj_device_id');
+  if (!did) {
+    did = 'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,8);
+    localStorage.setItem('yj_device_id', did);
+  }
+  return did;
+}
+
 // ===== Auth =====
+function toggleTeacherLogin() {
+  const tm = document.getElementById('login-teacher-mode');
+  const btn = document.getElementById('teacher-toggle-btn');
+  if (tm.style.display === 'none') {
+    tm.style.display = '';
+    btn.textContent = '학생 코드 입력으로';
+  } else {
+    tm.style.display = 'none';
+    btn.textContent = '선생님 로그인';
+  }
+}
+
+async function doStudentLogin() {
+  const code = document.getElementById('login-code').value.trim();
+  const errEl = document.getElementById('login-error');
+  if (!code || code.length !== 4) { errEl.textContent = '4자리 학생 코드를 입력하세요'; return; }
+  try {
+    const res = await fetch('/api/login', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({code, device_id: getDeviceId()})
+    });
+    const data = await res.json();
+    if (!res.ok) { errEl.textContent = data.error; return; }
+    currentUser = data;
+    errEl.textContent = '';
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app').classList.remove('hidden');
+    setupNav();
+    showStudentDashboard();
+    loadMediaInfo();
+  } catch(e) { errEl.textContent = '서버 연결 실패'; }
+}
+
 async function doLogin() {
   const username = document.getElementById('login-username').value.trim();
   const password = document.getElementById('login-password').value;
@@ -1538,16 +1595,19 @@ async function loadStudents() {
         return `<div style="display:flex;justify-content:space-between;font-size:12px;margin:2px 0">
           <span>${p.activity}</span><span>${apct}% (${p.sessions}회)</span></div>`;
       }).join('') || '<div style="font-size:12px;color:var(--text-light)">아직 학습 기록 없음</div>';
+      const deviceStatus = s.device_id ? '<span style="color:var(--success)">등록됨</span>' : '<span style="color:var(--text-light)">미등록</span>';
       return `
         <div class="student-card">
           <div class="name">${s.name}</div>
           <div class="username">@${s.username}</div>
-          <div style="font-size:12px;color:var(--text-light);margin-bottom:8px">등록: ${regDate} | 최근: ${lastDate}</div>
+          <div style="font-size:14px;font-weight:700;color:var(--primary);margin:4px 0;letter-spacing:3px;background:#F0EEFF;display:inline-block;padding:4px 12px;border-radius:8px">코드: ${s.access_code || '없음'}</div>
+          <div style="font-size:12px;color:var(--text-light);margin-bottom:8px">등록: ${regDate} | 최근: ${lastDate} | 기기: ${deviceStatus}</div>
           <div style="font-size:13px;font-weight:600;margin-bottom:4px">학습 ${totalSessions}회 | 정답률 ${pct}%</div>
           <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
           <div style="margin-top:10px;padding:8px;background:#F8F7FF;border-radius:8px">${activityHtml}</div>
           <div class="actions">
             <button class="btn-primary btn-sm" onclick="viewStudent(${s.id})">진도 보기</button>
+            <button class="btn-outline btn-sm" onclick="resetDevice(${s.id},'${s.name}')">기기 초기화</button>
             <button class="btn-outline btn-sm" onclick="resetStudentPw(${s.id},'${s.name}')">비번 초기화</button>
             <button class="btn-warning btn-sm" onclick="deleteStudent(${s.id},'${s.name}')">삭제</button>
           </div>
@@ -1579,6 +1639,13 @@ async function addStudent() {
 async function deleteStudent(id, name) {
   if (!confirm(`${name} 학생을 삭제하시겠습니까? 모든 학습 기록이 삭제됩니다.`)) return;
   await fetch(`/api/students/${id}`, {method:'DELETE'});
+  loadStudents();
+}
+
+async function resetDevice(id, name) {
+  if (!confirm(`${name} 학생의 기기 등록을 초기화하시겠습니까?\n다른 기기에서 다시 로그인할 수 있습니다.`)) return;
+  await fetch(`/api/students/${id}/reset-device`, {method:'POST'});
+  alert('기기가 초기화되었습니다. 학생이 새 기기에서 로그인할 수 있습니다.');
   loadStudents();
 }
 
@@ -2422,6 +2489,7 @@ if ('serviceWorker' in navigator) {
 
 // ===== Init =====
 document.getElementById('login-password').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+document.getElementById('login-code').addEventListener('keydown', e => { if (e.key === 'Enter') doStudentLogin(); });
 checkSession();
 </script>
 <script src="/static/bubble-game.js"></script>

@@ -4,7 +4,7 @@ YJ-Phonics - Flask 서버
 포트 7777, 학생/선생님 인증, 진도 추적
 CD 없이도 내장 데이터로 작동
 """
-import os, json, hashlib, secrets, sqlite3
+import os, json, hashlib, secrets, sqlite3, random, string
 from pathlib import Path
 from functools import wraps
 from urllib.request import urlopen, Request
@@ -83,6 +83,17 @@ def init_db():
             FOREIGN KEY(student_id) REFERENCES users(id)
         );
     ''')
+    # access_code, device_id 컬럼 추가 (기존 DB 마이그레이션)
+    try:
+        db.execute("ALTER TABLE users ADD COLUMN access_code TEXT DEFAULT ''")
+    except Exception:
+        pass
+    try:
+        db.execute("ALTER TABLE users ADD COLUMN device_id TEXT DEFAULT ''")
+    except Exception:
+        pass
+    db.commit()
+
     existing = db.execute("SELECT id FROM users WHERE role='teacher'").fetchone()
     if not existing:
         pw = hashlib.sha256('teacher1234'.encode()).hexdigest()
@@ -91,7 +102,26 @@ def init_db():
             ('teacher', pw, '선생님', 'teacher')
         )
         db.commit()
+
+    # 기존 학생 중 access_code 없는 학생에게 4자리 코드 자동 부여
+    students_no_code = db.execute(
+        "SELECT id FROM users WHERE role='student' AND (access_code IS NULL OR access_code='')"
+    ).fetchall()
+    for s in students_no_code:
+        code = _generate_unique_code(db)
+        db.execute("UPDATE users SET access_code=? WHERE id=?", (code, s['id']))
+    if students_no_code:
+        db.commit()
     db.close()
+
+
+def _generate_unique_code(db):
+    """고유 4자리 코드 생성"""
+    for _ in range(100):
+        code = ''.join(random.choices(string.digits, k=4))
+        if not db.execute("SELECT id FROM users WHERE access_code=?", (code,)).fetchone():
+            return code
+    return ''.join(random.choices(string.digits, k=4))
 
 
 def hash_pw(pw):
@@ -128,11 +158,36 @@ def login():
     data = request.get_json(force=True, silent=True) or {}
     username = data.get('username', '').strip()
     password = data.get('password', '')
+    code = data.get('code', '').strip()
+    device_id = data.get('device_id', '').strip()
     db = get_db()
-    user = db.execute("SELECT * FROM users WHERE username=?", (username,)).fetchone()
+
+    user = None
+    if code and len(code) == 4:
+        # 4자리 학생 코드 로그인
+        user = db.execute("SELECT * FROM users WHERE access_code=? AND role='student'", (code,)).fetchone()
+        if not user:
+            db.close()
+            return jsonify({'error': '잘못된 학생 코드입니다'}), 401
+    else:
+        # 선생님 아이디/비밀번호 로그인
+        user = db.execute("SELECT * FROM users WHERE username=?", (username,)).fetchone()
+        if not user or user['password_hash'] != hash_pw(password):
+            db.close()
+            return jsonify({'error': '아이디 또는 비밀번호가 틀립니다'}), 401
+
+    # 학생 기기 잠금 체크
+    if user['role'] == 'student' and device_id:
+        saved_device = user['device_id'] or ''
+        if not saved_device:
+            # 첫 로그인: 기기 등록
+            db.execute("UPDATE users SET device_id=? WHERE id=?", (device_id, user['id']))
+            db.commit()
+        elif saved_device != device_id:
+            db.close()
+            return jsonify({'error': '다른 기기에서 등록되어 있습니다. 선생님께 기기 초기화를 요청하세요.'}), 403
+
     db.close()
-    if not user or user['password_hash'] != hash_pw(password):
-        return jsonify({'error': '아이디 또는 비밀번호가 틀립니다'}), 401
     session['user_id'] = user['id']
     session['username'] = user['username']
     session['name'] = user['name']
@@ -166,7 +221,7 @@ def me():
 def list_students():
     db = get_db()
     students = db.execute(
-        "SELECT id, username, name, created_at FROM users WHERE role='student' ORDER BY name"
+        "SELECT id, username, name, created_at, access_code, device_id FROM users WHERE role='student' ORDER BY name"
     ).fetchall()
     result = []
     for s in students:
@@ -182,6 +237,8 @@ def list_students():
         result.append({
             'id': s['id'], 'username': s['username'],
             'name': s['name'], 'created_at': s['created_at'],
+            'access_code': s['access_code'] or '',
+            'device_id': s['device_id'] or '',
             'last_active': last['completed_at'] if last else None,
             'progress': [dict(p) for p in prog]
         })
@@ -202,14 +259,15 @@ def add_student():
     if db.execute("SELECT id FROM users WHERE username=?", (username,)).fetchone():
         db.close()
         return jsonify({'error': '이미 존재하는 아이디입니다'}), 400
+    code = _generate_unique_code(db)
     db.execute(
-        "INSERT INTO users (username, password_hash, name, role) VALUES (?, ?, ?, 'student')",
-        (username, hash_pw(password), name)
+        "INSERT INTO users (username, password_hash, name, role, access_code) VALUES (?, ?, ?, 'student', ?)",
+        (username, hash_pw(password), name, code)
     )
     db.commit()
     sid = db.execute("SELECT last_insert_rowid()").fetchone()[0]
     db.close()
-    return jsonify({'id': sid, 'username': username, 'name': name})
+    return jsonify({'id': sid, 'username': username, 'name': name, 'access_code': code})
 
 
 @app.route('/api/students/<int:sid>', methods=['DELETE'])
@@ -220,6 +278,16 @@ def delete_student(sid):
     db.execute("DELETE FROM story_progress WHERE user_id=?", (sid,))
     db.execute("DELETE FROM homework WHERE student_id=?", (sid,))
     db.execute("DELETE FROM users WHERE id=? AND role='student'", (sid,))
+    db.commit()
+    db.close()
+    return jsonify({'ok': True})
+
+
+@app.route('/api/students/<int:sid>/reset-device', methods=['POST'])
+@teacher_required
+def reset_student_device(sid):
+    db = get_db()
+    db.execute("UPDATE users SET device_id='' WHERE id=? AND role='student'", (sid,))
     db.commit()
     db.close()
     return jsonify({'ok': True})

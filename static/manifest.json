@@ -3,7 +3,7 @@
   "short_name": "YJ-Phonics",
   "description": "파닉스 학습 앱",
   "start_url": "/",
-  "display": "standalone",
+  "display": "minimal-ui",
   "background_color": "#F0F2FF",
   "theme_color": "#6C63FF",
   "orientation": "portrait",
