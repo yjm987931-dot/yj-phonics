@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Hooked on Phonics - Flask 서버
+YJ-Phonics - Flask 서버
 포트 7777, 학생/선생님 인증, 진도 추적
 CD 없이도 내장 데이터로 작동
 """
@@ -489,7 +489,7 @@ init_db()
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 7777))
     print("=" * 50)
-    print("  Hooked on Phonics - 파닉스 학습 서버")
+    print("  YJ-Phonics - 파닉스 학습 서버")
     print(f"  http://localhost:{port}")
     print("  선생님 계정: teacher / teacher1234")
     print("=" * 50)
