@@ -2,7 +2,13 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="YJ-Phonics">
+<meta name="theme-color" content="#6C63FF">
+<link rel="manifest" href="/static/manifest.json">
+<link rel="apple-touch-icon" href="/static/icons/icon-192.png">
 <title>YJ-Phonics - 파닉스 학습</title>
 <style>
 :root {
@@ -255,6 +261,34 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
 .hw-m-done { background:#D4EDDA; color:var(--success); }
 .hw-m-pending { background:#FFF3F3; color:var(--warning); }
 
+
+/* ===== Student Dashboard Nav ===== */
+.student-dashboard { padding:16px; max-width:600px; margin:0 auto; }
+.student-nav-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+.student-nav-btn { display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:24px 16px; background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    cursor:pointer; transition:all .2s; border:none; font-family:inherit; }
+.student-nav-btn:hover { transform:translateY(-3px); box-shadow:0 8px 25px rgba(108,99,255,0.25); }
+.student-nav-btn:active { transform:translateY(0); }
+.student-nav-btn .nav-icon { font-size:36px; margin-bottom:8px; }
+.student-nav-btn .nav-label { font-size:15px; font-weight:700; color:var(--text); }
+.student-nav-btn .nav-desc { font-size:11px; color:var(--text-light); margin-top:4px; }
+.student-nav-btn.hw-btn { border-top:4px solid var(--secondary); }
+.student-nav-btn.progress-btn { border-top:4px solid var(--vowel-i); }
+.student-nav-btn.practice-btn { border-top:4px solid var(--success); grid-column:1/-1; }
+
+/* Free Practice Sub-menu */
+.practice-menu { display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:600px; margin:0 auto; }
+.practice-card { display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:40px 20px; background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
+    cursor:pointer; transition:all .3s; border:none; font-family:inherit; }
+.practice-card:hover { transform:translateY(-6px); box-shadow:0 8px 25px rgba(108,99,255,0.25); }
+.practice-card .p-icon { font-size:48px; margin-bottom:12px; }
+.practice-card .p-label { font-size:18px; font-weight:700; color:var(--text); }
+.practice-card .p-desc { font-size:12px; color:var(--text-light); margin-top:6px; text-align:center; }
+.practice-card.words-card { border-top:5px solid var(--primary); }
+.practice-card.story-card { border-top:5px solid var(--accent); }
+
 /* ===== Responsive ===== */
 @media(max-width:768px) {
     nav { padding:0 12px; height:auto; flex-wrap:wrap; padding-bottom:8px; }
@@ -306,8 +340,52 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
     </div>
   </nav>
 
+
+  <!-- Free Practice Menu -->
+  <div id="screen-practice" class="screen">
+    <h2 style="text-align:center;margin-bottom:24px">자유 연습</h2>
+    <div class="practice-menu">
+      <button class="practice-card words-card" onclick="showScreen('home');switchHomeTab('words')">
+        <div class="p-icon">ABC</div>
+        <div class="p-label">Words</div>
+        <div class="p-desc">단어 탐색, 듣기 퀴즈,<br>스펠링, 글자 찾기</div>
+      </button>
+      <button class="practice-card story-card" onclick="showScreen('home');switchHomeTab('storybook')">
+        <div class="p-icon">&#128214;</div>
+        <div class="p-label">Story Book</div>
+        <div class="p-desc">파닉스 스토리<br>읽기, 빈칸, 배열</div>
+      </button>
+    </div>
+    <div style="text-align:center;margin-top:24px">
+      <button class="btn-outline" onclick="showStudentDashboard()">&#8592; 돌아가기</button>
+    </div>
+  </div>
+
+
+  <!-- Student Dashboard -->
+  <div id="screen-student-dash" class="screen student-dashboard">
+    <div class="student-nav-grid">
+      <button class="student-nav-btn hw-btn" onclick="showScreen('homework')">
+        <div class="nav-icon">&#128203;</div>
+        <div class="nav-label">과제</div>
+        <div class="nav-desc">배정된 과제 확인</div>
+      </button>
+      <button class="student-nav-btn progress-btn" onclick="showScreen('progress')">
+        <div class="nav-icon">&#128202;</div>
+        <div class="nav-label">내 진도</div>
+        <div class="nav-desc">학습 현황 확인</div>
+      </button>
+      <button class="student-nav-btn practice-btn" onclick="showScreen('practice')">
+        <div class="nav-icon">&#127918;</div>
+        <div class="nav-label">자유 연습</div>
+        <div class="nav-desc">Words &amp; Story Book 자유롭게 학습하기</div>
+      </button>
+    </div>
+  </div>
+
   <!-- Home -->
   <div id="screen-home" class="screen">
+    <button class="btn-outline btn-sm student-only-back" onclick="showScreen('practice')" style="margin-bottom:12px;display:none">&#8592; 자유 연습</button>
     <div class="home-tabs">
       <button class="home-tab active" onclick="switchHomeTab('words')">Words</button>
       <button class="home-tab" onclick="switchHomeTab('storybook')">Story Book</button>
@@ -367,6 +445,7 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
 
   <!-- Word Explorer -->
   <div id="screen-words" class="screen">
+    <button class="btn-outline btn-sm" onclick="goBackFromPractice()" style="margin-bottom:12px">&#8592; 돌아가기</button>
     <h2>단어 탐색기</h2>
     <div class="search-bar">
       <input type="text" id="word-search" placeholder="단어 검색..." oninput="filterWords()">
@@ -386,6 +465,7 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
 
   <!-- Game Show (Listening Quiz) -->
   <div id="screen-gameshow" class="screen">
+    <button class="btn-outline btn-sm" onclick="goBackFromPractice()" style="margin-bottom:12px">&#8592; 돌아가기</button>
     <h2>듣기 퀴즈</h2>
     <div class="game-container">
       <div id="gs-play">
@@ -421,6 +501,7 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
 
   <!-- Spelling Quiz -->
   <div id="screen-spelling" class="screen">
+    <button class="btn-outline btn-sm" onclick="goBackFromPractice()" style="margin-bottom:12px">&#8592; 돌아가기</button>
     <h2>스펠링 퀴즈</h2>
     <div class="game-container">
       <div id="sp-play">
@@ -461,6 +542,7 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
 
   <!-- I Spy -->
   <div id="screen-ispy" class="screen">
+    <button class="btn-outline btn-sm" onclick="goBackFromPractice()" style="margin-bottom:12px">&#8592; 돌아가기</button>
     <h2>글자 찾기</h2>
     <div class="game-container">
       <div id="is-start">
@@ -493,6 +575,7 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
 
   <!-- My Progress -->
   <div id="screen-progress" class="screen">
+    <button class="btn-outline btn-sm" onclick="showStudentDashboard()" style="margin-bottom:12px">&#8592; 돌아가기</button>
     <h2>내 학습 현황</h2>
     <div class="progress-cards" id="progress-summary"></div>
     <h3>최근 학습 기록</h3>
@@ -641,6 +724,7 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
 
   <!-- Homework Tab (Student) -->
   <div id="screen-homework" class="screen">
+    <button class="btn-outline btn-sm" onclick="showStudentDashboard()" style="margin-bottom:12px">&#8592; 돌아가기</button>
     <h2>내 과제</h2>
     <div id="hw-list"></div>
   </div>
@@ -779,7 +863,8 @@ async function doLogin() {
     document.getElementById('login-screen').classList.add('hidden');
     document.getElementById('app').classList.remove('hidden');
     setupNav();
-    showScreen('home');
+    if (data.role === 'student') showStudentDashboard();
+    else showScreen('home');
     loadMediaInfo();
   } catch(e) { errEl.textContent = '서버 연결 실패'; }
 }
@@ -801,7 +886,8 @@ async function checkSession() {
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('app').classList.remove('hidden');
       setupNav();
-      showScreen('home');
+      if (data.role === 'student') showStudentDashboard();
+      else showScreen('home');
       loadMediaInfo();
     }
   } catch(e) {}
@@ -820,20 +906,32 @@ function setupNav() {
   const userDisp = document.getElementById('user-display');
   userDisp.textContent = `${currentUser.name} (${currentUser.role === 'teacher' ? '선생님' : '학생'})`;
 
-  let links = [];
   if (currentUser.role === 'teacher') {
-    links = [
+    const links = [
       {id:'home',label:'홈'},{id:'words',label:'단어 탐색기'},{id:'teacher',label:'학생 관리'}
     ];
+    nav.innerHTML = links.map(l =>
+      `<button onclick="showScreen('${l.id}')" data-screen="${l.id}">${l.label}</button>`
+    ).join('');
   } else {
-    links = [
-      {id:'home',label:'홈'},{id:'words',label:'단어 탐색기'},{id:'gameshow',label:'듣기 퀴즈'},
-      {id:'spelling',label:'스펠링'},{id:'ispy',label:'글자 찾기'},{id:'homework',label:'과제'},{id:'progress',label:'내 진도'}
-    ];
+    // 학생: nav-links 숨기고 대시보드 사용
+    nav.style.display = 'none';
   }
-  nav.innerHTML = links.map(l =>
-    `<button onclick="showScreen('${l.id}')" data-screen="${l.id}">${l.label}</button>`
-  ).join('');
+}
+
+function goBackFromPractice() {
+  if (currentUser && currentUser.role === 'student') showScreen('practice');
+  else showScreen('home');
+}
+
+function showStudentDashboard() {
+  // 모든 화면 숨기기
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+  // 대시보드 화면 표시
+  const dash = document.getElementById('screen-student-dash');
+  if (dash) { dash.classList.add('active'); }
+  currentScreen = 'student-dash';
 }
 
 function showScreen(id) {
@@ -844,6 +942,9 @@ function showScreen(id) {
   document.querySelectorAll('.nav-links button').forEach(b => {
     b.classList.toggle('active', b.dataset.screen === id);
   });
+  // 학생: 홈 화면에 "자유 연습" 돌아가기 표시
+  const backBtn = document.querySelector('.student-only-back');
+  if (backBtn) backBtn.style.display = (id === 'home' && currentUser && currentUser.role === 'student') ? '' : 'none';
   if (id === 'home') { reviewMode = null; renderReviewGrid(); }
   if (id === 'words') renderWordExplorer();
   if (id === 'gameshow') renderLevelBar('gs-level-bar', gsLevel, 'changeGsLevel');
@@ -2186,6 +2287,11 @@ async function viewStudentFull(id) {
     }
     showScreen('student-detail');
   } catch(e) {}
+}
+
+// ===== PWA Service Worker =====
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/static/sw.js').catch(() => {});
 }
 
 // ===== Init =====
