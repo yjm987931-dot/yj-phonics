@@ -348,6 +348,53 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
 .bubble-listen-btn { width:32px; height:32px; border-radius:50%; border:none; background:linear-gradient(135deg,#4361ee,#3a86ff); color:white; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; }
 #bubbleResultDetail { color:rgba(255,255,255,0.6); font-size:14px; margin-bottom:16px; text-align:center; line-height:1.6; }
 
+/* ===== Date Group Cards (학생 과제) ===== */
+.hw-date-group { margin-bottom:20px; }
+.hw-date-header { display:flex; justify-content:space-between; align-items:center; padding:10px 16px; background:#E8E6FF; border-radius:12px 12px 0 0; font-weight:700; font-size:15px; color:var(--primary); }
+.hw-date-header .hw-date-badge { font-size:12px; padding:4px 10px; border-radius:10px; font-weight:600; }
+.hw-date-badge.all-done { background:#D4EDDA; color:var(--success); }
+.hw-date-badge.pending-count { background:#FFF3F3; color:var(--warning); }
+.hw-date-cards { background:#F8F7FF; border-radius:0 0 12px 12px; padding:12px; }
+
+/* ===== Progress Timeline (학생 진도) ===== */
+.progress-timeline { margin-top:8px; }
+.pt-date-group { margin-bottom:16px; }
+.pt-date-header { font-size:14px; font-weight:700; color:var(--text); padding:8px 0; border-bottom:2px solid #E8E6FF; margin-bottom:8px; }
+.pt-item { display:flex; align-items:center; gap:12px; padding:8px 12px; margin-bottom:4px; background:var(--card); border-radius:10px; box-shadow:0 1px 4px rgba(0,0,0,0.06); }
+.pt-icon { font-size:20px; width:28px; text-align:center; }
+.pt-label { flex:1; font-size:13px; color:var(--text); }
+.pt-score { font-size:14px; font-weight:700; color:var(--primary); }
+
+/* ===== Homework Calendar (선생님) ===== */
+.hw-cal-wrap { background:var(--card); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow); margin-top:16px; }
+.hw-cal-nav { display:flex; justify-content:center; align-items:center; gap:24px; margin-bottom:16px; }
+.hw-cal-nav button { background:none; border:2px solid var(--primary); color:var(--primary); border-radius:50%; width:36px; height:36px; font-size:18px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; }
+.hw-cal-nav button:hover { background:var(--primary); color:#fff; }
+.hw-cal-nav .cal-title { font-size:18px; font-weight:700; color:var(--text); min-width:140px; text-align:center; }
+.hw-cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; }
+.hw-cal-grid .cal-dayname { text-align:center; font-size:12px; font-weight:700; color:var(--text-light); padding:6px 0; }
+.hw-cal-grid .cal-dayname:first-child { color:var(--warning); }
+.hw-cal-grid .cal-dayname:last-child { color:#4A90D9; }
+.cal-cell { position:relative; text-align:center; padding:8px 4px; min-height:48px; border-radius:8px; cursor:pointer; transition:background .15s; font-size:14px; }
+.cal-cell:hover { background:#F0EEFF; }
+.cal-cell.today { font-weight:800; background:#E8E6FF; }
+.cal-cell.selected { background:var(--primary); color:#fff; font-weight:700; }
+.cal-cell.selected .cal-dots span { box-shadow:0 0 0 1px #fff; }
+.cal-cell.empty { cursor:default; }
+.cal-cell.empty:hover { background:transparent; }
+.cal-dots { display:flex; justify-content:center; gap:3px; margin-top:4px; }
+.cal-dot { width:6px; height:6px; border-radius:50%; }
+.cal-dot.done { background:var(--success); }
+.cal-dot.undone { background:var(--warning); }
+.hw-cal-detail { margin-top:16px; padding:16px; background:#F8F7FF; border-radius:12px; }
+.hw-cal-detail h4 { font-size:15px; margin-bottom:12px; color:var(--primary); }
+.hw-cal-item { display:flex; align-items:center; gap:10px; padding:8px 12px; margin-bottom:6px; background:var(--card); border-radius:8px; font-size:13px; }
+.hw-cal-item .hw-cal-icon { font-size:18px; }
+.hw-cal-item .hw-cal-info { flex:1; }
+.hw-cal-item .hw-cal-stat { font-size:12px; color:var(--text-light); }
+.hw-cal-assign { margin-top:12px; padding-top:12px; border-top:1px dashed #ccc; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.hw-cal-assign select, .hw-cal-assign input { padding:7px 10px; border-radius:8px; border:2px solid #E0E0E0; font-size:13px; }
+
 /* ===== Responsive ===== */
 @media(max-width:768px) {
     nav { padding:0 12px; height:auto; flex-wrap:wrap; padding-bottom:8px; }
@@ -733,10 +780,7 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
     <h2>내 학습 현황</h2>
     <div class="progress-cards" id="progress-summary"></div>
     <h3>최근 학습 기록</h3>
-    <table class="history-table">
-      <thead><tr><th>활동</th><th>정답</th><th>총 문제</th><th>점수</th><th>날짜</th></tr></thead>
-      <tbody id="progress-history"></tbody>
-    </table>
+    <div id="progress-timeline" class="progress-timeline"></div>
   </div>
 
   <!-- Teacher: Dashboard -->
@@ -752,41 +796,17 @@ nav .user-info button { font-size:12px; padding:6px 12px; }
       </div>
     </div>
 
-    <!-- 일괄 과제 배정 -->
-    <div class="add-form" style="margin-top:20px;border-top:3px solid var(--secondary)">
-      <h3>일괄 과제 배정 (전체 학생)</h3>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:12px">
-        <div>
-          <label style="font-size:13px;font-weight:600;display:block;margin-bottom:4px">과제 유형</label>
-          <select id="bulk-hw-type" onchange="updateBulkOptions()" style="padding:8px 12px;border-radius:8px;border:2px solid #E0E0E0;font-size:14px">
-            <option value="words">Words (듣기+스펠링)</option>
-            <option value="storybook">Story Book</option>
-          </select>
-        </div>
-        <div>
-          <label style="font-size:13px;font-weight:600;display:block;margin-bottom:4px">레벨/Day</label>
-          <select id="bulk-hw-target" style="padding:8px 12px;border-radius:8px;border:2px solid #E0E0E0;font-size:14px">
-            <option value="1">Level 1</option>
-            <option value="2">Level 2</option>
-            <option value="3">Level 3</option>
-            <option value="4">Level 4</option>
-            <option value="5">Level 5</option>
-            <option value="6">Level 6</option>
-          </select>
-        </div>
-        <div>
-          <label style="font-size:13px;font-weight:600;display:block;margin-bottom:4px">마감일</label>
-          <input type="date" id="bulk-hw-due" style="padding:8px 12px;border-radius:8px;border:2px solid #E0E0E0;font-size:14px">
-        </div>
-        <div style="padding-top:20px">
-          <button class="btn-secondary" onclick="assignBulkHw()" style="font-size:15px;padding:10px 24px">전체 배정</button>
-        </div>
+    <!-- 과제 달력 -->
+    <div class="hw-cal-wrap" id="hw-calendar-wrap">
+      <div class="hw-cal-nav">
+        <button onclick="calPrev()">&#9664;</button>
+        <span class="cal-title" id="cal-title"></span>
+        <button onclick="calNext()">&#9654;</button>
       </div>
-      <div id="bulk-hw-status" style="margin-top:10px;font-size:13px;color:var(--text-light)"></div>
+      <div class="hw-cal-grid" id="hw-cal-grid"></div>
+      <div id="hw-cal-detail-area"></div>
     </div>
-
-    <!-- 현재 과제 현황 -->
-    <div id="bulk-hw-list" style="margin-top:16px"></div>
+    <div id="bulk-hw-status" style="margin-top:10px;font-size:13px;color:var(--text-light)"></div>
 
     <div class="teacher-grid" id="student-list"></div>
   </div>
@@ -1576,7 +1596,7 @@ async function loadProgress() {
   try {
     const res = await fetch('/api/progress');
     const data = await res.json();
-    renderProgress(data.summary, data.history, 'progress-summary', 'progress-history');
+    renderProgress(data.summary, data.history, 'progress-summary', 'progress-timeline');
   } catch(e) {}
 }
 
@@ -1607,16 +1627,37 @@ function renderProgress(summary, history, sumId, histId) {
   `).join('');
 
   const histEl = document.getElementById(histId);
-  histEl.innerHTML = history.slice(0, 50).map(h => `
-    <tr>
-      <td>${h.activity}</td>
-      ${histId.includes('sd') ? `<td>${h.word||'-'}</td>` : ''}
-      <td>${h.correct}/${h.total}</td>
-      <td>${histId.includes('sd') ? `${h.correct}/${h.total}` : ''}</td>
-      <td>${h.score}점</td>
-      <td>${new Date(h.completed_at).toLocaleDateString('ko-KR')}</td>
-    </tr>
-  `).join('') || '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text-light)">아직 학습 기록이 없습니다</td></tr>';
+  if (!history.length) {
+    histEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-light)">아직 학습 기록이 없습니다</div>';
+    return;
+  }
+  const dayNames = ['일','월','화','수','목','금','토'];
+  const actIcons = {'듣기':'&#127918;','스펠링':'Aa','글자':'&#128300;','버블':'&#129531;','Fill':'&#128214;','Unscramble':'&#128260;','Read':'&#128214;'};
+  function getIcon(act) { for (const [k,v] of Object.entries(actIcons)) { if (act.includes(k)) return v; } return '&#128203;'; }
+  // Group by date
+  const groups = {};
+  for (const h of history.slice(0,50)) {
+    const dt = new Date(h.completed_at);
+    const key = dt.toISOString().split('T')[0];
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(h);
+  }
+  const sortedDates = Object.keys(groups).sort((a,b) => b.localeCompare(a));
+  let html = '';
+  for (const dateStr of sortedDates) {
+    const dt = new Date(dateStr);
+    const label = `${dt.getMonth()+1}월 ${dt.getDate()}일 (${dayNames[dt.getDay()]})`;
+    html += `<div class="pt-date-group"><div class="pt-date-header">${label}</div>`;
+    for (const h of groups[dateStr]) {
+      html += `<div class="pt-item">
+        <span class="pt-icon">${getIcon(h.activity)}</span>
+        <span class="pt-label">${h.activity} (${h.correct}/${h.total})</span>
+        <span class="pt-score">${h.score}점</span>
+      </div>`;
+    }
+    html += '</div>';
+  }
+  histEl.innerHTML = html;
 }
 
 async function saveResult(activity, correct, total, score) {
@@ -2331,22 +2372,36 @@ async function loadHomework() {
 
 function renderHomework(progData) {
   const list = document.getElementById('hw-list');
-  const pending = homeworkCache.filter(h => !h.completed);
-  const done = homeworkCache.filter(h => h.completed);
-
+  if (!homeworkCache.length) {
+    list.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text-light)"><p style="font-size:48px;margin-bottom:16px">&#128516;</p><p>배정된 과제가 없습니다!</p></div>';
+    return;
+  }
+  const dayNames = ['일','월','화','수','목','금','토'];
+  // Group by date (due_date or assigned_at)
+  const groups = {};
+  for (const h of homeworkCache) {
+    const d = h.due_date || (h.assigned_at ? h.assigned_at.split('T')[0].split(' ')[0] : 'unknown');
+    if (!groups[d]) groups[d] = [];
+    groups[d].push(h);
+  }
+  // Sort dates descending
+  const sortedDates = Object.keys(groups).sort((a,b) => b.localeCompare(a));
   let html = '';
-  if (pending.length) {
-    html += '<div class="hw-section"><h3>미완료 과제</h3>';
-    html += pending.map(h => renderHwCard(h, progData)).join('');
-    html += '</div>';
-  }
-  if (done.length) {
-    html += '<div class="hw-section"><h3>완료된 과제</h3>';
-    html += done.map(h => renderHwCard(h, progData)).join('');
-    html += '</div>';
-  }
-  if (!pending.length && !done.length) {
-    html = '<div style="text-align:center;padding:60px;color:var(--text-light)"><p style="font-size:48px;margin-bottom:16px">&#128516;</p><p>배정된 과제가 없습니다!</p></div>';
+  for (const dateStr of sortedDates) {
+    const items = groups[dateStr];
+    const dt = new Date(dateStr);
+    const isValid = !isNaN(dt.getTime());
+    const dateLabel = isValid ? `${dt.getMonth()+1}월 ${dt.getDate()}일 (${dayNames[dt.getDay()]})` : dateStr;
+    const pendCount = items.filter(h => !h.completed).length;
+    const allDone = pendCount === 0;
+    const badgeHtml = allDone
+      ? '<span class="hw-date-badge all-done">완료!</span>'
+      : `<span class="hw-date-badge pending-count">${pendCount}개 남음</span>`;
+    html += `<div class="hw-date-group">`;
+    html += `<div class="hw-date-header"><span>${dateLabel}</span>${badgeHtml}</div>`;
+    html += `<div class="hw-date-cards">`;
+    html += items.map(h => renderHwCard(h, progData)).join('');
+    html += `</div></div>`;
   }
   list.innerHTML = html;
 }
@@ -2415,10 +2470,107 @@ function renderHwCard(hw, progData) {
   </div>`;
 }
 
-// ===== Teacher: Bulk Homework Assignment =====
-function updateBulkOptions() {
-  const type = document.getElementById('bulk-hw-type').value;
-  const sel = document.getElementById('bulk-hw-target');
+// ===== Teacher: Homework Calendar =====
+let calYear, calMonth, calAllHw = [], calSelectedDate = null;
+
+function initCalendar() {
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
+}
+function calPrev() { calMonth--; if (calMonth < 0) { calMonth = 11; calYear--; } renderHwCalendar(); }
+function calNext() { calMonth++; if (calMonth > 11) { calMonth = 0; calYear++; } renderHwCalendar(); }
+
+function renderHwCalendar() {
+  const dayNames = ['일','월','화','수','목','금','토'];
+  document.getElementById('cal-title').textContent = `${calYear}년 ${calMonth+1}월`;
+  const grid = document.getElementById('hw-cal-grid');
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const lastDate = new Date(calYear, calMonth+1, 0).getDate();
+  const today = new Date(); const todayStr = today.toISOString().split('T')[0];
+
+  // Build date→homework map
+  const dateMap = {};
+  for (const h of calAllHw) {
+    const d = h.due_date || (h.assigned_at ? h.assigned_at.split('T')[0].split(' ')[0] : null);
+    if (d) { if (!dateMap[d]) dateMap[d] = []; dateMap[d].push(h); }
+  }
+
+  let html = dayNames.map((d,i) => `<div class="cal-dayname">${d}</div>`).join('');
+  // Empty cells before first day
+  for (let i = 0; i < firstDay; i++) html += '<div class="cal-cell empty"></div>';
+  for (let d = 1; d <= lastDate; d++) {
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = dateStr === todayStr;
+    const isSel = dateStr === calSelectedDate;
+    const items = dateMap[dateStr] || [];
+    let dotsHtml = '';
+    if (items.length) {
+      const doneCount = items.filter(h => h.completed).length;
+      const undoneCount = items.length - doneCount;
+      dotsHtml = '<div class="cal-dots">';
+      for (let i = 0; i < Math.min(doneCount,3); i++) dotsHtml += '<span class="cal-dot done"></span>';
+      for (let i = 0; i < Math.min(undoneCount,3); i++) dotsHtml += '<span class="cal-dot undone"></span>';
+      dotsHtml += '</div>';
+    }
+    html += `<div class="cal-cell${isToday?' today':''}${isSel?' selected':''}" onclick="selectCalDay('${dateStr}')">${d}${dotsHtml}</div>`;
+  }
+  grid.innerHTML = html;
+
+  // Re-render detail if selected date exists
+  if (calSelectedDate) renderCalDayDetail(calSelectedDate, dateMap[calSelectedDate] || []);
+}
+
+function selectCalDay(dateStr) {
+  calSelectedDate = dateStr;
+  renderHwCalendar();
+}
+
+function renderCalDayDetail(dateStr, items) {
+  const area = document.getElementById('hw-cal-detail-area');
+  const dt = new Date(dateStr);
+  const dayNames = ['일','월','화','수','목','금','토'];
+  const label = `${dt.getMonth()+1}월 ${dt.getDate()}일 (${dayNames[dt.getDay()]})`;
+
+  let html = `<div class="hw-cal-detail"><h4>${label} 과제</h4>`;
+  if (items.length) {
+    // Group by hw_target
+    const groups = {};
+    for (const h of items) {
+      const key = h.hw_target;
+      if (!groups[key]) groups[key] = { label:h.hw_label, type:h.hw_type, items:[] };
+      groups[key].items.push(h);
+    }
+    for (const [target, g] of Object.entries(groups)) {
+      const done = g.items.filter(i => i.completed).length;
+      const total = g.items.length;
+      const icon = g.type === 'storybook' ? '&#128214;' : '&#127918;';
+      html += `<div class="hw-cal-item">
+        <span class="hw-cal-icon">${icon}</span>
+        <span class="hw-cal-info"><strong>${g.label}</strong></span>
+        <span class="hw-cal-stat">완료 ${done}/${total}</span>
+        <button class="btn-warning btn-sm" style="padding:4px 10px;font-size:11px" onclick="deleteHwByTarget('${target}','${dateStr}')">삭제</button>
+      </div>`;
+    }
+  } else {
+    html += '<div style="font-size:13px;color:var(--text-light);padding:8px">이 날 과제 없음</div>';
+  }
+  // Assign form
+  html += `<div class="hw-cal-assign">
+    <select id="cal-hw-type" onchange="updateCalOptions()">
+      <option value="words">Words</option>
+      <option value="storybook">Story Book</option>
+    </select>
+    <select id="cal-hw-target-sel">${[1,2,3,4,5,6].map(l=>`<option value="${l}">Level ${l}</option>`).join('')}</select>
+    <button class="btn-secondary btn-sm" onclick="assignHwForDate('${dateStr}')">배정</button>
+  </div>`;
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function updateCalOptions() {
+  const type = document.getElementById('cal-hw-type').value;
+  const sel = document.getElementById('cal-hw-target-sel');
   if (type === 'words') {
     sel.innerHTML = [1,2,3,4,5,6].map(l => `<option value="${l}">Level ${l}</option>`).join('');
   } else {
@@ -2426,70 +2578,45 @@ function updateBulkOptions() {
   }
 }
 
-async function assignBulkHw() {
-  const type = document.getElementById('bulk-hw-type').value;
-  const target = document.getElementById('bulk-hw-target').value;
-  const due = document.getElementById('bulk-hw-due').value || null;
+async function assignHwForDate(dateStr) {
+  const type = document.getElementById('cal-hw-type').value;
+  const target = document.getElementById('cal-hw-target-sel').value;
   let hwType, hwTarget, hwLabel;
   if (type === 'words') {
-    hwType = 'words';
-    hwTarget = `word_lv${target}`;
-    hwLabel = `Words Level ${target} (듣기+스펠링)`;
+    hwType = 'words'; hwTarget = `word_lv${target}`; hwLabel = `Words Level ${target} (듣기+스펠링)`;
   } else {
-    hwType = 'storybook';
-    hwTarget = `day_${target}`;
-    hwLabel = `Story Book Day ${target}`;
+    hwType = 'storybook'; hwTarget = `day_${target}`; hwLabel = `Story Book Day ${target}`;
   }
-  if (!confirm(`전체 학생에게 "${hwLabel}" 과제를 배정하시겠습니까?`)) return;
+  if (!confirm(`전체 학생에게 "${hwLabel}" 과제를 ${dateStr}에 배정하시겠습니까?`)) return;
   try {
     const res = await fetch('/api/homework/bulk', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ hw_type:hwType, hw_target:hwTarget, hw_label:hwLabel, due_date:due })
+      body:JSON.stringify({ hw_type:hwType, hw_target:hwTarget, hw_label:hwLabel, due_date:dateStr })
     });
     const data = await res.json();
     if (res.ok) {
       document.getElementById('bulk-hw-status').textContent = `${data.count}명에게 과제 배정 완료!`;
       document.getElementById('bulk-hw-status').style.color = 'var(--success)';
-      loadBulkHwList();
+      await loadBulkHwList();
       loadStudents();
-    } else {
-      alert(data.error || '오류');
-    }
+    } else { alert(data.error || '오류'); }
   } catch(e) { alert('서버 오류'); }
+}
+
+async function deleteHwByTarget(target, dateStr) {
+  if (!confirm('이 과제를 전체 삭제하시겠습니까?')) return;
+  const toDelete = calAllHw.filter(h => h.hw_target === target && (h.due_date || (h.assigned_at||'').split('T')[0].split(' ')[0]) === dateStr);
+  for (const h of toDelete) { await fetch(`/api/homework/${h.id}`, {method:'DELETE'}); }
+  await loadBulkHwList();
+  loadStudents();
 }
 
 async function loadBulkHwList() {
   try {
     const res = await fetch('/api/homework/all');
-    const all = await res.json();
-    const el = document.getElementById('bulk-hw-list');
-    if (!all.length) { el.innerHTML = ''; return; }
-    // Group by hw_target
-    const groups = {};
-    for (const h of all) {
-      const key = h.hw_target;
-      if (!groups[key]) groups[key] = { label:h.hw_label, due:h.due_date, items:[] };
-      groups[key].items.push(h);
-    }
-    let html = '<div style="background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)">';
-    html += '<h3 style="margin-bottom:12px">현재 과제 현황</h3>';
-    for (const [target, g] of Object.entries(groups)) {
-      const done = g.items.filter(i => i.completed).length;
-      const total = g.items.length;
-      const pct = Math.round(done/total*100);
-      html += `<div style="display:flex;align-items:center;gap:12px;padding:10px;margin:6px 0;background:#F8F7FF;border-radius:10px">
-        <div style="flex:1">
-          <strong>${g.label}</strong>
-          <span style="font-size:12px;color:var(--text-light);margin-left:8px">${g.due ? '마감: '+g.due : ''}</span>
-          <div style="font-size:12px;margin-top:4px">완료: ${done}/${total}명 (${pct}%)</div>
-          <div class="progress-bar-bg" style="height:6px;margin-top:4px"><div class="progress-bar-fill" style="width:${pct}%;background:${pct>=80?'var(--success)':pct>=50?'var(--accent)':'var(--warning)'}"></div></div>
-          <div style="font-size:11px;margin-top:4px;color:var(--text-light)">${g.items.map(i => `${i.student_name}${i.completed?'✅':'❌'}`).join(' | ')}</div>
-        </div>
-        <button class="btn-warning btn-sm" onclick="deleteBulkHw('${target}')">전체 삭제</button>
-      </div>`;
-    }
-    html += '</div>';
-    el.innerHTML = html;
+    calAllHw = await res.json();
+    if (!calYear) initCalendar();
+    renderHwCalendar();
   } catch(e) {}
 }
 
